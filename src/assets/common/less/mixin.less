@@ -1,0 +1,31 @@
+
+// 不换行
+.no-wrap(){
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+// 扩展点击区域
+.extend-click(){
+  position: relative;
+  &:before{
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+  }
+}
+
+.placeholderStyle(){
+  input::-webkit-input-placeholder {
+    /* placeholder颜色  */
+    color: @color-text-ll;
+    /* placeholder字体大小  */
+    font-size: @font-size-medium;
+    /* placeholder位置  */
+   text-align: center;
+   }
+}
