@@ -115,7 +115,6 @@ export default {
   width: 100%;
   min-width: 1200px;
   background: @color-background-d;
-  padding-bottom: 100px;
 }
 ._content {
   width: 900px;

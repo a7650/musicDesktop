@@ -1,6 +1,6 @@
 <template>
   <div class="rank">
-    <mHeader class="header"><font style="color:#fff">排行榜</font></mHeader>
+    <mHeader class="header">排行榜</mHeader>
     <div class="content">
       <div class="move left">
         <i class="icon-left" @click="left"></i>
@@ -33,9 +33,9 @@
             </div>
           </li>
         </ul>
-        <!-- <div class="dots">
+        <div class="dots">
           <span class="dot" v-for="i in pageNum" :key="i" :class="{'active':i==page}"></span>
-        </div> -->
+        </div>
       </div>
       <div class="move right">
         <div></div>
@@ -72,34 +72,28 @@ export default {
   },
   methods: {
     left() {
-      // if (this.page == 1) {
-      //   return;
-      // } else {
-      //   this.page--;
-      //   this.$refs.items.style.transform = `translateX(${-(this.page - 1) *
-      //     1080}px)`;
-      // }
-       this.rotate += 24;
-      this.$refs.items.style.transform = "rotateY(" + this.rotate + "deg)";
+      if (this.page == 1) {
+        return;
+      } else {
+        this.page--;
+        this.$refs.items.style.transform = `translateX(${-(this.page - 1) *
+          1080}px)`;
+      }
     },
-    // right(){
-    //   if(this.page==this.pageNum){
-    //     return
-    //   }else{
-    //     this.page++;
-    //     this.$refs.items.style.transform=`translateX(${-(this.page-1)*1080}px)`
-    //   }
-    // },
-    right() {
-      this.rotate -= 24;
-      this.$refs.items.style.transform = "rotateY(" + this.rotate + "deg)";
+    right(){
+      if(this.page==this.pageNum){
+        return
+      }else{
+        this.page++;
+        this.$refs.items.style.transform=`translateX(${-(this.page-1)*1080}px)`
+      }
     },
     _getRankList() {
       getRankList().then(
         data => {
           this.topList = data.topList.splice(0, 15);
           // console.log(this.topList);
-          // this.pageNum = Math.ceil(this.topList.length / 5);
+          this.pageNum = Math.ceil(this.topList.length / 5);
         },
         err => {
           console.log(err);
@@ -132,7 +126,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
++<style lang="less" scoped>
 @import "~common/less/variable.less";
 @import "~common/less/mixin.less";
 .rank {
@@ -141,49 +135,46 @@ export default {
   width: 100%;
   color: #000;
   // min-width: 1200px;
-  background: #000;
+  padding-bottom: 100px;
 }
-.header {
+.header{
   min-width: 1200px;
 }
-.content {
-  width: 1200px;
-  margin: 0 auto;
+.content{
+  width: 100%;
   height: 520px;
   position: relative;
+  min-width: 1200px;
   display: flex;
-  margin-bottom: 50px;
 }
 .rank-content {
-  width: 1100px;
+  width: 1090px;
   height: 100%;
-  overflow: hidden;
-  // flex: 1;
+  box-sizing: border-box;
+  padding-left: 15px;
+  margin: 0 auto;
   position: relative;
-  // overflow: hidden;
-  perspective: 10000px;
-  
+  overflow: hidden;
 }
 .bg {
-  width: 150%;
-  height: 150%;
+  width: 120%;
+  height: 120%;
   position: absolute;
-  top: -25%;
-  left: -25%;
-  filter: blur(40px);
+  top: -10%;
+  left: -10%;
+  filter: blur(20px);
   img {
-    width: 100%;
-    height: 100%;
+    min-height: 100%;
   }
 }
-.filter {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  background-color: #000;
-  opacity: 0.4;
-}
+    .filter {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      background-color: #000;
+      opacity: .2;
+    }
 ._bg {
   position: absolute;
   width: 100%;
@@ -191,37 +182,32 @@ export default {
   top: 0;
 }
 .items {
-  width: 100%;
+  width: 5000px;
   height: 100%;
   box-sizing: border-box;
   padding-top: 35px;
-  transition: 0.3s;
+  transition: .8s;
   user-select: none;
-  transform-style: preserve-3d;
-
   .item {
     color: #fff;
     width: 196px;
     height: 450px;
     background-color: #fff;
-    // margin-right: 20px;
+    margin-right: 20px;
     overflow: hidden;
-    position: absolute;
-    top: 35px;
-    left: 50%;
-    margin-left: -98px;
-    // box-shadow: 0 0 7px rgba(0, 0, 0, 1);
-    transition: 0.2s;
+    float: left;
+    position: relative;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 1);
+    transition: .2s;
     transform-origin: center;
-    // border-radius: 11px;
-    backface-visibility: hidden;
+    border-radius: 3px;
     .name {
       width: 100%;
       height: 45px;
       font-size: 30px;
       text-align: center;
       margin-top: 30px;
-      transition: 0.2s;
+      transition: .2s;
     }
     .icon {
       width: 100%;
@@ -235,93 +221,17 @@ export default {
       }
     }
   }
-
-  .item:nth-child(1) {
-    transform: rotateY(-48deg) translateZ(@t-z);
+  .active{
+    transform: scale(1.05);
   }
-  .item:nth-child(2) {
-    transform: rotateY(-24deg) translateZ(@t-z);
-  }
-  .item:nth-child(3) {
-    transform: rotateY(0deg) translateZ(@t-z);
-  }
-  .item:nth-child(4) {
-    transform: rotateY(24deg) translateZ(@t-z);
-  }
-  .item:nth-child(5) {
-    transform: rotateY(48deg) translateZ(@t-z);
-  }
-  .item:nth-child(6) {
-    transform: rotateY(72deg) translateZ(@t-z);
-  }
-  .item:nth-child(7) {
-    transform: rotateY(96deg) translateZ(@t-z);
-  }
-  .item:nth-child(8) {
-    transform: rotateY(120deg) translateZ(@t-z);
-  }
-  .item:nth-child(9) {
-    transform: rotateY(144deg) translateZ(@t-z);
-  }
-  .item:nth-child(10) {
-    transform: rotateY(168deg) translateZ(@t-z);
-  }
-  .item:nth-child(11) {
-    transform: rotateY(192deg) translateZ(@t-z);
-  }
-  .item:nth-child(12) {
-    transform: rotateY(216deg) translateZ(@t-z);
-  }
-  .item:nth-child(13) {
-    transform: rotateY(240deg) translateZ(@t-z);
-  }
-  .item:nth-child(14) {
-    transform: rotateY(264deg) translateZ(@t-z);
-  }
-  .item:nth-child(15) {
-    transform: rotateY(288deg) translateZ(@t-z);
-  }
-
-  // .item:nth-child(1),.item:nth-child(5){
-  //   transform: scale(.6);
-  // }
-  // .item:nth-child(2),.item:nth-child(4){
-  //   transform: scale(.8);
-  // }
-  // .item:nth-child(3){
-  //   transform: scale(1);
-  // }
-  // .item:nth-child(1){
-  //   transform: rotateY(-30deg) scale(.6);
-  // }
-  // .item:nth-child(2){
-  //   transform: rotateY(-15deg) scale(.8);
-  // }
-  // .item:nth-child(4){
-  //   transform: rotateY(15deg) scale(.8);
-  // }
-  // .item:nth-child(5){
-  //   transform: rotateY(30deg) scale(.6);
-  // }
-  //   .side{
-  //   transform: scale(.6);
-  // }
-  // ._side{
-  //   transform: scale(.8);
-  // }
-  // .center{
-  //   transform: scale(1);
-  // }
-  // .active{
-  //   transform: scale(1.05);
-  // }
-  .item:hover {
+  .item:hover{
     cursor: pointer;
-    // transform: scale(1.05);
+    transform: scale(1.05);
   }
   // ._bg:hover>.name{
   //   color: @color-theme;
   // }
+
 }
 ._items {
   margin-top: 40px;
@@ -347,50 +257,27 @@ export default {
     }
   }
 }
-.move {
+.move{
   height: 100%;
+  width: 50px;
   line-height: 520px;
   text-align: center;
   z-index: 99;
-  width: 50px;
-  position: relative;
-  div{
-    width: 130px;
-    height: 100%;
-    display: block;
-    position: absolute;
-    z-index: -99;
-    top: 0;
-    
-  }
-  i {
-    color: #fff;
-    opacity: 0.3;
+  flex: 1;
+  i{
+    color: #000;
+    opacity: .2;
     font-size: 50px;
     font-weight: bold;
-    transition: 0.3s;
+    transition: .3s;
   }
-  i:hover {
+  i:hover{
     opacity: 1;
     cursor: pointer;
   }
 }
-.left {
-  text-align: left;
-  div{
-  left:  100%;
-  background: linear-gradient(to right, #000 , transparent);
-}
-}
-.right{
-  text-align: right;
-   div{
-  right: 100%;
-  background: linear-gradient(to left, #000 , transparent);
-}
-}
 
-.dots {
+.dots{
   width: 100%;
   height: 20px;
   text-align: center;
@@ -398,21 +285,22 @@ export default {
   bottom: 0;
   left: 0;
   line-height: 20px;
-  .dot {
+  .dot{
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: #00000029;
-    transition: 0.5s;
+    background-color:#00000029;
+    transition: .3s;
     display: inline-block;
     margin-right: 10px;
   }
-  .dot:last-child {
+  .dot:last-child{
     margin: 0;
   }
-  .active {
+  .active{
     width: 16px;
     background-color: #000000b5;
   }
 }
+
 </style>
