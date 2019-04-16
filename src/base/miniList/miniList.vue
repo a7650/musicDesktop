@@ -7,7 +7,7 @@
         :key="index"
         @click="_selectSong(song,index)"
       >
-        <span class="song-name" v-html="filterSrc(song.name,song.src)"></span>
+        <span class="song-name" v-html="song.name"></span>
         <span class="singer" v-html="song.singer"></span>
         <span class="icon">
           <i :class="favoriteIcon(song)" @click.stop="setFavorite(song)"></i>

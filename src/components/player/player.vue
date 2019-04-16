@@ -18,7 +18,7 @@
       </div>
       <div class="detail">
         <div class="song-d">
-          <span v-if="playList.length" class="name">{{currentSong.name}}</span>
+          <span v-if="playList.length" class="name" v-html="currentSong.name"></span>
           <span v-else class="name">当前未选择歌曲</span>
           <span class="singer">{{currentSong.singer}}</span>
         </div>
@@ -68,13 +68,14 @@ import processBar from "base/process-bar/process-bar";
 import { shuffle } from "common/js/tools";
 import { playMode } from "common/config";
 import miniList from "base/miniList/miniList"
+import { constants } from 'fs';
 // import {setPlayHistory} from "common/js/cache"
 export default {
   data() {
     return {
       currentTime: "",
       readyPlay: false,
-      ready: false,
+      ready: true,
       listShow: false,
       miniList:false
     };
@@ -130,7 +131,7 @@ export default {
       this.audio.currentTime = time;
     },
     nextSong() {
-      if (!(this.readyPlay && this.ready)) {
+      if (!this.ready) {
         return;
       }
       if (this.playList.length === 1) {
@@ -193,9 +194,9 @@ export default {
         return;
       }
       if (!newSong.mid || !newSong.src) {
-        this.nextSong();
+        this.nextSong()
         return;
-      }
+      }//！！！全部不存在src的时候会死循环
       this.initPlayer();
       this.$refs.audio.src = newSong.src;
       this.$refs.audio.play();

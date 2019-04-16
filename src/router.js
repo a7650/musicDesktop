@@ -31,7 +31,14 @@ export default new Router({
     },
     {
       path: '/rank',
-      component: () => import('components/rank/rank')
+      component: () => import('components/rank/rank'),
+      children:[
+        {
+          name:'rankDetail',
+          path:':id',
+          component:()=>import('components/rankDetail/rankDetail')
+        }
+      ]
     },
     {
       path: '/mine',

@@ -21,6 +21,6 @@ header {
   text-align: center;
   font-size: 26px;
   font-weight: 600;
-  min-width: 1200px;
+//   min-width: 1200px;
 }
 </style>

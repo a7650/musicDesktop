@@ -95,7 +95,7 @@ export default {
       });
     },
     randomPlay() {
-      let randomList = shuffle(this.songList[1]);
+      let randomList = shuffle(this.songList[this.currentPage]);
       this.selectSong({
         list: randomList,
         index: 0

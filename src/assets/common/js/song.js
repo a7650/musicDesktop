@@ -116,6 +116,7 @@ export function _encaseSongList(list, data) {
         getSongVkey(item.mid).then((res) => {
             let vkey = res.data.items[0].vkey;
             item.src = vkey ? `http://dl.stream.qqmusic.qq.com/C400${item.mid}.m4a?fromtag=38&guid=5931742855&vkey=${vkey}` : "";
+            item.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`
         })
     })
     return result;
