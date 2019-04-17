@@ -86,7 +86,7 @@ export default {
     .singer,
     .album,
     .duration {
-      padding: 0 20px;
+      padding: 0 10px;
       flex: 1;
     }
     .singer {
@@ -135,6 +135,9 @@ export default {
       align-self: center;
       div {
         flex: 1;
+        line-height: 100%;
+        display: flex;
+        align-items: center;
       }
       ._rank {
         font-size: 12px;

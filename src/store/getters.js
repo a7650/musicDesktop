@@ -16,3 +16,7 @@ export const favoriteMid = state => state.favoriteMid
 
 export const myAlbum = state => state.myAlbum
 
+export const favoriteSong = state => state.favoriteSong
+
+export const collectAlbum = state => state.collectAlbum
+

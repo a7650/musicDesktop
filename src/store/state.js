@@ -10,6 +10,8 @@ const state = {
     currentIndex:-1,
     playMode:playMode.sequence,
     favoriteMid:getFavoriteMid()||[],
-    myAlbum:getMyAlbum()
+    myAlbum:getMyAlbum(),
+    favoriteSong:[],
+    collectAlbum:getCollectAlbum()
 }
 export default state

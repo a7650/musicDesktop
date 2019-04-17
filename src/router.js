@@ -43,6 +43,11 @@ export default new Router({
     {
       path: '/mine',
       component: () => import('components/mine/mine')
-    }
+    },
+    {
+      name:'discDetail_mine',
+      path:'/mine/:id',
+      component:()=>import('components/discDetail/discDetail')
+    },
   ]
 })

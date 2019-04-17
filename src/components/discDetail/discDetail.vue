@@ -77,10 +77,11 @@ export default {
     },
     _collectAlbum() {
       let m = setCollectAlbum({
-        pic: this.singer.pic,
+        pic: this.pic,
         nickname:this.nickname,
         dissname: this.dissname,
         disstid: this.disstid,
+        desc:this.desc,
         collectAlbum: true
       });
       if (m.type === 1) {

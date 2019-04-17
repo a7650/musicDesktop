@@ -1,6 +1,6 @@
 import * as types from './mutation-types'
 import {getFavoriteMid,addFavorite,deleteFavorite} from 'common/js/favorite'
-import {saveSearchHistory,clearSearchHistory,getMyAlbum,getCollectAlbum} from 'common/js/cache'
+import {saveSearchHistory,clearSearchHistory,getMyAlbum,getCollectAlbum,getCreateAlbum} from 'common/js/cache'
 
 
 const mutations = {
@@ -57,6 +57,7 @@ const mutations = {
         state.sequenceList = state.playList;
     },
 
+    
 }
 
 export default mutations

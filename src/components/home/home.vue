@@ -117,7 +117,9 @@ export default {
   }
   .discDetail{
      height: 700px;
-     width: 1200px;
+     width: 1120px;
+     box-sizing: border-box;
+     padding-left: 20px;
      margin:  0 auto;
   }
 }

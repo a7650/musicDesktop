@@ -49,14 +49,14 @@ export function clearSearchHistory({ flag, index }) {
 
 //my-album
 export function getMyAlbum() {
-    return storage.get(MYALBUM_KEY, [{ name: "我的收藏", bgUrl: "" }]);
+    return storage.get(MYALBUM_KEY, [{ name: "我的收藏", pic: "" }]);
 }
 
 export function getCreateAlbum(val) {
     if (val) {
         let album = storage.get(CREATEALBUM_KEY, []);
         if (album.length === 0) {
-            let f = { name: "我的收藏", bgImg: './default.png', desc: "这个歌单是由系统生成的默认收藏歌单", songList: [] };
+            let f = { name: "我的收藏", pic: './default.png', desc: "这个歌单是由系统生成的默认收藏歌单", songList: [] };
             storage.set(CREATEALBUM_KEY, [f]);
             return f;
 
@@ -84,8 +84,10 @@ export function setCreateAlbum(name, song) {
     }
     else {
         try {
+            song.src = ""
+            song.rank = ""
             album.songList.unshift(song);
-            album.bgUrl = song.image;
+            album.pic = song.image;
             let oldCreateAlbum = getCreateAlbum();
             let newCreateAlbum = resetArray(oldCreateAlbum, album, item => item.name === name, 999, 1);
             storage.set(CREATEALBUM_KEY, newCreateAlbum);
@@ -111,18 +113,18 @@ export function deleteFromAlbum(albumname, song) {
     }
 }
 
-export function createAlbum(name, desc) {
+export function createAlbum(nickname, desc) {
     let all = getMyAlbum();
-    let n = all.findIndex(item => item.name === name);
+    let n = all.findIndex(item => item.nickname === nickname);
     if (n > -1) {
         return { type: 0, mes: "该歌单已存在" }
     } else {
         try {
-            all.splice(1, 0, { name, desc });
+            all.splice(1, 0, { nickname, desc });
             storage.set(MYALBUM_KEY, all);
             let album = getCreateAlbum();
-            album.splice(1, 0, { name, desc, bgUrl: "", songList: [] });
-            console.log(album);
+            album.splice(1, 0, { nickname, desc, pic: "", songList: [] });
+            // console.log(album);
             storage.set(CREATEALBUM_KEY, album);
             return { type: 1, mes: "创建成功" }
         } catch (e) {
