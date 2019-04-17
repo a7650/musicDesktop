@@ -20,3 +20,9 @@ export const favoriteSong = state => state.favoriteSong
 
 export const collectAlbum = state => state.collectAlbum
 
+export const searchText = state => state.searchText
+
+export const searchHistory = state => state.searchHistory
+
+
+

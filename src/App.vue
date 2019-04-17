@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <tab></tab>
-    <keep-alive exclude="discDetail,singerDetail"><router-view></router-view></keep-alive>
+    <keep-alive exclude="discDetail,singerDetail,search"><router-view></router-view></keep-alive>
     <player></player>
     <button class="top" @click="top">
       <i class="icon-up"></i>

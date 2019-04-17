@@ -49,5 +49,10 @@ export default new Router({
       path:'/mine/:id',
       component:()=>import('components/discDetail/discDetail')
     },
+    {
+      name:'search',
+      path:'/search',
+      component:()=>import('components/search/search')
+    }
   ]
 })

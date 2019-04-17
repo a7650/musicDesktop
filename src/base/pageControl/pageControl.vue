@@ -1,12 +1,17 @@
 <template>
-    <div class="page-control" >
-      <div @click="selectPage(1)" class="first" v-text="'<<'"></div>
-      <div @click="selectPage(prev)" :class="{'active':currentPage===prev}" class="prev">{{prev}}</div>
-      <div  @click="selectPage(cur)" :class="{'active':currentPage===cur}" class="cur">{{cur}}</div>
-      <div @click="selectPage(next)" :class="{'active':currentPage===next}" class="next">{{next}}</div>
-      <div class="dot" v-show="currentPage<pageNum-2">......</div>
-      <div @click="selectPage(pageNum)" :class="{'active':currentPage===pageNum}" class="num">{{pageNum}}</div>
-      <div @click="selectPage(pageNum)" class="last" v-text="'>>'"></div>
+    <div>
+      <div class="page-control" v-if="pageNum>3">
+        <div @click="selectPage(1)" class="first" v-text="'<<'"></div>
+        <div @click="selectPage(prev)" :class="{'active':currentPage===prev}" class="prev">{{prev}}</div>
+        <div  @click="selectPage(cur)" :class="{'active':currentPage===cur}" class="cur">{{cur}}</div>
+        <div @click="selectPage(next)" :class="{'active':currentPage===next}" class="next">{{next}}</div>
+        <div class="dot" v-show="currentPage<pageNum-2">......</div>
+        <div @click="selectPage(pageNum)" :class="{'active':currentPage===pageNum}" class="num">{{pageNum}}</div>
+        <div @click="selectPage(pageNum)" class="last" v-text="'>>'"></div>
+      </div>
+      <div class="page-control" v-else>
+        <div @click="selectPage(i)" :class="{'active':currentPage===i}" v-for="i in pageNum" :key="i">{{i}}</div>
+      </div>
     </div>
 </template>
 

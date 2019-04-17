@@ -33,7 +33,7 @@
         :songList="songList[currentPage]"
         v-if="songList[currentPage].length>0"
       ></songList>
-      <loading loadingText v-else></loading>
+      <loading  v-else></loading>
     </div>
 
     <pageControl
@@ -65,7 +65,7 @@ export default {
       total: 0,
       currentPage: 1,
       pageNum: 1,
-      nowNum: "",
+      nowNum: 0,
       albumNum: "",
       mid: "",
       name: "",

@@ -12,6 +12,7 @@ const state = {
     favoriteMid:getFavoriteMid()||[],
     myAlbum:getMyAlbum(),
     favoriteSong:[],
-    collectAlbum:getCollectAlbum()
+    collectAlbum:getCollectAlbum(),
+    searchText:""
 }
 export default state

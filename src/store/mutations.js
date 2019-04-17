@@ -57,6 +57,18 @@ const mutations = {
         state.sequenceList = state.playList;
     },
 
+    [types.SET_SEARCHTEXT](state,str){
+        state.searchText = str
+    },
+
+    [types.SAVE_SEARCHHISTORY](state,val){
+        state.searchHistory = saveSearchHistory(val);
+    },
+
+    [types.CLEAR_SEARCHHISTORY](state,payload){
+        state.searchHistory = clearSearchHistory(payload);
+    },
+
     
 }
 

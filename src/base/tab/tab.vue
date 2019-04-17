@@ -9,10 +9,21 @@
         <router-link tag="div" to="/mine" replace class="item">我的</router-link>
       </div>
       <div class="search">
-        <input type="text" placeholder="搜索">
+        <input type="text" placeholder="搜索" @focus="boxShow=true" @blur="blur">
         <div class="icon">
           <i class="icon-search"></i>
         </div>
+        <transition name="box">
+          <div class="box" v-show="boxShow">
+            <ul>
+              <li v-for="(key,index) in hotKey" :key="key.k" @click="select(key.k)">
+                <span class="index">{{index+1}}</span>
+                <span class="name">{{key.k}}</span>
+                <span class="hot">{{key.n | formateHot}}</span>
+              </li>
+            </ul>
+          </div>
+        </transition>
       </div>
       <div class="login">
         <button>登录</button>
@@ -22,7 +33,44 @@
 </template>
 
 <script>
-export default {};
+import { getHotKey } from "api/search";
+import { formateHot } from "common/js/tools";
+import {mapMutations} from "vuex"
+import { constants } from 'fs';
+export default {
+  data() {
+    return {
+      boxShow: false,
+      hotKey: []
+    };
+  },
+  filters:{
+    formateHot
+} ,
+  methods: {
+    blur(){
+      setTimeout(() => {
+        this.boxShow=false
+      }, 300);
+    },
+    _getHotKey() {
+      getHotKey().then(data => {
+        this.hotKey = data.data.hotkey.splice(0, 10);
+      });
+    },
+    select(str){
+      this.SET_SEARCHTEXT(str)
+      this.boxShow = false;
+      this.$router.push({
+        name:"search"
+      })
+    },
+    ...mapMutations(["SET_SEARCHTEXT"])
+  },
+  created() {
+    this._getHotKey();
+  }
+};
 </script>
 
 <style lang="less" scoped>
@@ -38,6 +86,7 @@ export default {};
   border-bottom: 1px solid @color-line;
   z-index: 999;
   min-width: 1200px;
+  transition: 0.5s;
   & > div {
     display: flex;
     justify-content: center;
@@ -55,8 +104,8 @@ export default {};
   .items {
     width: 400px;
     height: 100%;
-    &:hover{
-        cursor: pointer;
+    &:hover {
+      cursor: pointer;
     }
     .item {
       width: 100px;
@@ -74,8 +123,8 @@ export default {};
       background-color: @color-theme;
       color: #fff;
     }
-    .router-link-active:hover{
-        color: #fff;
+    .router-link-active:hover {
+      color: #fff;
     }
   }
   .search {
@@ -83,14 +132,16 @@ export default {};
     height: 100%;
     line-height: 80px;
     margin-left: 5px;
+    position: relative;
     input {
       box-sizing: border-box;
       padding-right: 40px;
-      width: 200px;
+      width: 100%;
       border: 1px solid rgb(201, 201, 201);
       height: 38px;
-      border-radius: 10px;
+      border-radius: 3px;
       padding-left: 8px;
+      background: #fff;
     }
     .icon {
       display: inline-block;
@@ -102,6 +153,52 @@ export default {};
       i {
         color: #000;
         font-weight: bold;
+      }
+    }
+    .box {
+      width: 210px;
+      // min-height: 240px;
+      // height: 300px;
+      // max-height: 390px;
+      transition: 0.2s;
+      // animation-duration: .2s;
+      // overflow: hidden;
+      position: absolute;
+      top: 58px;
+      box-sizing: border-box;
+      border: 1px solid rgb(201, 201, 201);
+      // background-color: #ff0000;
+      background-color: #fff;
+      border-radius: 2px;
+      // z-index: -99;
+      li {
+        width: 100%;
+        height: 35px;
+        line-height: 35px;
+        .no-wrap;
+        color: #000;
+        span {
+          .no-wrap;
+          display: inline-block;
+        }
+        .index {
+          color: @color-theme;
+          width: 15%;
+          text-align: center;
+        }
+        .name {
+          width: 60%;
+        }
+        .hot {
+          width: 25%;
+          color: @color-text-dd;
+          font-size: @font-size-small-x;
+          text-align: center;
+        }
+      }
+      li:hover {
+        background-color: @color-line;
+        cursor: pointer;
       }
     }
   }
@@ -121,5 +218,11 @@ export default {};
       }
     }
   }
+}
+.box-enter,
+.box-leave-to {
+  transform: translateY(-80px);
+  // height: 0;
+  opacity: 0;
 }
 </style>
