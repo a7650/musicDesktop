@@ -9,12 +9,14 @@
         <router-link tag="div" to="/mine" replace class="item">我的</router-link>
       </div>
       <div class="search">
-        <input type="text" placeholder="搜索" @focus="boxShow=true" @blur="blur">
+        <input type="text" placeholder="搜索" @focus="boxShow=true" @blur="blur" v-model="searchText" >
         <div class="icon">
           <i class="icon-search"></i>
         </div>
         <transition name="box">
           <div class="box" v-show="boxShow">
+            <div v-show="searchText" class="s" @click="select(searchText)">搜索<font>"{{searchText}}"</font></div>
+            <h5>实时热搜</h5>
             <ul>
               <li v-for="(key,index) in hotKey" :key="key.k" @click="select(key.k)">
                 <span class="index">{{index+1}}</span>
@@ -41,7 +43,8 @@ export default {
   data() {
     return {
       boxShow: false,
-      hotKey: []
+      hotKey: [],
+      searchText:""
     };
   },
   filters:{
@@ -61,6 +64,7 @@ export default {
     select(str){
       this.SET_SEARCHTEXT(str)
       this.boxShow = false;
+      this.searchText = ""
       this.$router.push({
         name:"search"
       })
@@ -84,7 +88,7 @@ export default {
   height: 80px;
   width: 100%;
   border-bottom: 1px solid @color-line;
-  z-index: 999;
+  z-index: 99;
   min-width: 1200px;
   transition: 0.5s;
   & > div {
@@ -171,6 +175,29 @@ export default {
       background-color: #fff;
       border-radius: 2px;
       // z-index: -99;
+      .s{
+        width: 100%;
+        height: 30px;
+        line-height: 30px;text-align: center;
+        box-sizing: border-box;
+        padding: 0 10px;
+        color: #000;
+        font-size: 14px;
+        .no-wrap;
+        border-bottom:1px solid  rgba(0, 0, 0, .08);
+        font{
+          color: @color-theme;
+        }
+      }
+      h5{
+        width: 100%;
+        height: 20px;
+        line-height: 20px;
+        font-size: 14px;
+        color: @color-text-dd;
+        text-align: center;
+        margin-top: 5px;
+      }
       li {
         width: 100%;
         height: 35px;
@@ -196,7 +223,7 @@ export default {
           text-align: center;
         }
       }
-      li:hover {
+      li:hover,.s:hover {
         background-color: @color-line;
         cursor: pointer;
       }
