@@ -54,7 +54,7 @@ export default {
     blur(){
       setTimeout(() => {
         this.boxShow=false
-      }, 300);
+      }, 100);
     },
     _getHotKey() {
       getHotKey().then(data => {
@@ -88,7 +88,7 @@ export default {
   height: 80px;
   width: 100%;
   border-bottom: 1px solid @color-line;
-  z-index: 99;
+  z-index: 999;
   min-width: 1200px;
   transition: 0.5s;
   & > div {
@@ -248,7 +248,7 @@ export default {
 }
 .box-enter,
 .box-leave-to {
-  transform: translateY(-80px);
+  transform: translateY(-40px);
   // height: 0;
   opacity: 0;
 }

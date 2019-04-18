@@ -9,7 +9,7 @@
       </div>
       <div class="text-content">
         <h3 class="name">{{name}}</h3>
-        <h4 class="country">{{country}}</h4>
+        <h4 class="country">{{country!='undefined'?country:''}}</h4>
         <h5 class="num">
           单曲
           <span>{{total}}</span>
