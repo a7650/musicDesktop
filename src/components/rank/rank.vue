@@ -9,7 +9,7 @@
       <div class="rank-content">
         <ul class="items" ref="items">
           <li
-            v-for="item in topList"
+            v-for="item in filterList"
             :key="item.id"
             :class="{'active':active==item.id}"
             class="item"
@@ -70,6 +70,13 @@ export default {
       return val.replace("巅峰榜·", "");
     }
   },
+  computed:{
+    filterList(){
+      return this.topList.filter(item=>{
+        return item.id!==201
+      })
+    }
+  },
   methods: {
     left() {
       if (this.page == 1) {
@@ -91,7 +98,7 @@ export default {
     _getRankList() {
       getRankList().then(
         data => {
-          this.topList = data.topList.splice(0, 15);
+          this.topList = data.topList;
           // console.log(this.topList);
           this.pageNum = Math.ceil(this.topList.length / 5);
         },
@@ -131,7 +138,7 @@ export default {
 @import "~common/less/mixin.less";
 .rank {
   position: absolute;
-  padding-top: 80px;
+  padding-top: 70px;
   width: 100%;
   color: #000;
   // min-width: 1200px;
@@ -197,10 +204,10 @@ export default {
     overflow: hidden;
     float: left;
     position: relative;
-    box-shadow: 0 0 7px rgba(0, 0, 0, 1);
+    // box-shadow: 0 0 7px rgba(0, 0, 0, 1);
     transition: .2s;
     transform-origin: center;
-    border-radius: 3px;
+    border-radius: 2px;
     .name {
       width: 100%;
       height: 45px;

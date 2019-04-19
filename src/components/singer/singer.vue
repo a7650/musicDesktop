@@ -82,7 +82,7 @@ export default {
 @import "~common/less/mixin.less";
 .singer {
   position: absolute;
-  padding-top: 80px;
+  padding-top: 70px;
   width: 100%;
   color: #000;
   min-width: 1200px;

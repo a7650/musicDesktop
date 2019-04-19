@@ -69,6 +69,10 @@ const mutations = {
         state.searchHistory = clearSearchHistory(payload);
     },
 
+    [types.SET_USERSTATUS](state,name){
+        state.userStatus = name
+    }
+
     
 }
 

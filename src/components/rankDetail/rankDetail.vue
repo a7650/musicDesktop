@@ -2,6 +2,7 @@
   <div class="rank-detail">
     <div class="_content">
       <mHeader>{{title}}</mHeader>
+      <chart :title="title" :xAxisData="xAxisData" :seriesData="seriesData" :yAxisName="yAxisName"></chart>
       <songList
         :songList="songList"
         headLine="1"
@@ -19,11 +20,16 @@ import { formateHot } from "common/js/tools";
 import { getSongList, getComment } from "api/rank";
 import { mapGetters, mapActions } from "vuex";
 import songList from "base/songList/songList";
+import chart from "components/chart/chart";
 export default {
   data() {
     return {
       songList: [],
-      title: ""
+      title: "",
+      xAxisData: [],
+      seriesData: [],
+      yAxisName: "",
+      err_message:""
     };
   },
   computed: {
@@ -31,17 +37,10 @@ export default {
   },
   components: {
     mHeader,
-    songList
+    songList,
+    chart
   },
   methods: {
-    // formateDate(date) {
-    //   if (!date) return;
-    //   let n = date.indexOf("_");
-    //   if (n > -1) {
-    //     return "第" + date.slice(n + 1) + "周";
-    //   }
-    //   return date;
-    // },
     _selectSong(index) {
       this.selectSong({
         list: [...this.songList],
@@ -50,7 +49,6 @@ export default {
     },
     _getSongList(id = this.singer.id || this.$route.params.id) {
       getSongList(id).then(data => {
-        this.title = data.topinfo.ListName;
         // this.pic = data.topinfo.pic_v12;
         // this.hot = formateHot(data.comment_num);
         // this.date = this.formateDate(data.date);
@@ -59,25 +57,39 @@ export default {
           this.err_message = "这个榜单暂时没有歌曲，去看看别的吧";
           return;
         }
+        // console.log(data.songlist);
         this.songList = this._encaseSongList(data.songlist);
+        this.title = data.topinfo.ListName;
         // console.log(this.songList)
       });
     },
     _encaseSongList(list) {
-      let result = [];
-      let len = list.length;
+      let result = [],
+          len = list.length,
+          _seriesData = [],
+          _xAxisData = [];
       for (var i = 0; i < len; i++) {
         let item = list[i];
         if (item.data.songid && item.data.songmid) {
           if (this.singer.id === 4) {
-            var r = (parseFloat(item.in_count) * 100).toFixed(0) + "%";
+            var _r = (parseFloat(item.in_count) * 100).toFixed(0),
+                r = _r + "%";
+            this.yAxisName = "流行指数/%";
+            _seriesData.push(_r);
+            _xAxisData.push(item.data.songname);
           } else {
-            var r = parseInt(item.cur_count) - parseInt(item.old_count);
-            r = r === 0 ? "-" : r < 0 ? "↑ " + -r : "↓ " + r;
+            var _r = parseInt(item.cur_count) - parseInt(item.old_count),
+                r = _r === 0 ? "-" : _r < 0 ? "↑ " + -_r : "↓ " + _r;
+            this.yAxisName = "上升指数/位";
+            _r < 0 &&
+              _seriesData.push(-_r) &&
+              _xAxisData.push(item.data.songname);
           }
           result.push(createSong(item.data, "", r));
         }
       }
+      this.seriesData = _seriesData;
+      this.xAxisData = _xAxisData;
       for (var j = 0; j < len; j++) {
         let item = result[j];
         getSongVkey(item.mid).then(res => {
@@ -92,6 +104,47 @@ export default {
       }
       return result;
     },
+    // _encaseSongList(list) {
+    //   let result = [];
+    //   let len = list.length;
+    //   let _seriesData=[]
+    //   let _xAxisData=[]
+    //   for (var i = 0; i < len; i++) {
+    //     let item = list[i];
+    //     if (item.data.songid && item.data.songmid) {
+    //       if (this.singer.id === 4) {
+    //         var _r = (parseFloat(item.in_count) * 100).toFixed(0);
+    //         var r = _r + "%";
+    //         this.yAxisName = "流行指数/%"
+    //         _seriesData.push(_r)
+    //         _xAxisData.push(item.data.songname)
+    //       } else {
+    //         var _r = parseInt(item.cur_count) - parseInt(item.old_count);
+    //         r = _r === 0 ? "-" : _r < 0 ? "↑ " + -_r : "↓ " + _r;
+    //         this.yAxisName = "上升指数/位"
+    //         _r<0&&_seriesData.push(-_r)&&_xAxisData.push(item.data.songname)
+    //       }
+    //       result.push(createSong(item.data, "", r));
+    //     }
+    //   }
+    //   this.seriesData=_seriesData
+    //   this.xAxisData=_xAxisData
+    //   console.log(_seriesData)
+    //   console.log(_xAxisData)
+    //   for (var j = 0; j < len; j++) {
+    //     let item = result[j];
+    //     getSongVkey(item.mid).then(res => {
+    //       let vkey = res.data.items[0].vkey;
+    //       item.src = vkey
+    //         ? `http://dl.stream.qqmusic.qq.com/C400${
+    //             item.mid
+    //           }.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`
+    //         : "";
+    //       item.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`;
+    //     });
+    //   }
+    //   return result;
+    // },
     ...mapActions(["selectSong"])
   },
   created() {

@@ -112,7 +112,7 @@ export default {
   height: 100%;
   min-width: 1200px;
   box-sizing: border-box;
-  padding-top: 80px;
+  padding-top: 70px;
   color: #000;
   .items {
     width: 100%;

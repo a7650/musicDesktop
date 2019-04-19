@@ -14,6 +14,7 @@ const state = {
     favoriteSong:[],
     collectAlbum:getCollectAlbum(),
     searchText:"",
-    searchHistory:getSearchHistory()
+    searchHistory:getSearchHistory(),
+    userStatus:""
 }
 export default state

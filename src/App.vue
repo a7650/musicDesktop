@@ -12,6 +12,7 @@
 <script>
 import tab from "base/tab/tab"
 import player from "components/player/player"
+
 export default {
   components: {
     tab,player

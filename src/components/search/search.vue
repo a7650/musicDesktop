@@ -6,7 +6,7 @@
       </div>
       <div class="input-content">
         <input type="text" v-model="i_searchText" @focus="historyShow=true" @blur="historyHide">
-        <button @click="_search">搜索</button>
+        <button @click="_search">搜 索</button>
         <transition name="a">
           <div class="search-history" v-show="searchHistory.length&&historyShow">
           <ul>
@@ -211,7 +211,7 @@ export default {
   height: 100%;
   min-width: 1200px;
   box-sizing: border-box;
-  padding-top: 80px;
+  padding-top: 70px;
   color: #000;
 }
 .search {
@@ -239,23 +239,24 @@ export default {
     margin-top: -20px;
     width: 100%;
     height: 40px;
-    text-align: center;
+    display: flex;
+    justify-content: center;
     transform-style: preserve-3d;
     input {
       width: 500px;
       height: 40px;
-      border-radius: 3px;
       background-color: #fff;
       box-sizing: border-box;
       padding-left: 10px;
     }
     button {
       width: 70px;
-      height: 40px;
-      background-color: #fff;
-      border-radius: 3px;
-      margin-left: 20px;
+      height: 100%;
+      // margin-top: -5px;
+      background-color: @color-theme;
+      color: #fff;
       border: none;
+
     }
     button:hover {
       background-color: @color-theme;
@@ -270,10 +271,9 @@ export default {
   position: absolute;
   top: 39px;
   left: 50%;
-  margin-left: -295px;
+  margin-left: -285px;
   border-top: 1px solid @color-line;
   z-index: 99;
-  border-radius: 2px;
   padding:5px 0;
   transform-origin:50% 0;
   transition: .3s;

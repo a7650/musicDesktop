@@ -1,6 +1,6 @@
 <template>
   <div class="tab" id="tab">
-    <div>
+    <div class="content">
       <div class="logo">LOGO</div>
       <div class="items">
         <router-link tag="div" to="/home" replace class="item">推荐</router-link>
@@ -9,13 +9,16 @@
         <router-link tag="div" to="/mine" replace class="item">我的</router-link>
       </div>
       <div class="search">
-        <input type="text" placeholder="搜索" @focus="boxShow=true" @blur="blur" v-model="searchText" >
+        <input type="text" placeholder="搜索" @focus="boxShow=true" @blur="blur" v-model="searchText">
         <div class="icon">
           <i class="icon-search"></i>
         </div>
         <transition name="box">
           <div class="box" v-show="boxShow">
-            <div v-show="searchText" class="s" @click="select(searchText)">搜索<font>"{{searchText}}"</font></div>
+            <div v-show="searchText" class="s" @click="select(searchText)">
+              搜索
+              <font>"{{searchText}}"</font>
+            </div>
             <h5>实时热搜</h5>
             <ul>
               <li v-for="(key,index) in hotKey" :key="key.k" @click="select(key.k)">
@@ -28,32 +31,44 @@
         </transition>
       </div>
       <div class="login">
-        <button>登录</button>
+        <button v-if="userStatus">{{userStatus}}</button>
+        <button v-else @click="loginShow=true">登录</button>
       </div>
     </div>
+    <transition name="filter">
+      <div class="filter" v-show="loginShow" @click="loginShow=false"></div>
+    </transition>
+    <login v-show="loginShow" @close="loginShow=false"></login>
   </div>
 </template>
 
 <script>
 import { getHotKey } from "api/search";
 import { formateHot } from "common/js/tools";
-import {mapMutations} from "vuex"
-import { constants } from 'fs';
+import { mapMutations ,mapGetters} from "vuex";
+import login from "components/login/login";
 export default {
   data() {
     return {
       boxShow: false,
       hotKey: [],
-      searchText:""
+      searchText: "",
+      loginShow:false
     };
   },
-  filters:{
+  filters: {
     formateHot
-} ,
+  },
+  components: {
+    login
+  },
+  computed:{
+    ...mapGetters(["userStatus"])
+  },
   methods: {
-    blur(){
+    blur() {
       setTimeout(() => {
-        this.boxShow=false
+        this.boxShow = false;
       }, 100);
     },
     _getHotKey() {
@@ -61,13 +76,13 @@ export default {
         this.hotKey = data.data.hotkey.splice(0, 10);
       });
     },
-    select(str){
-      this.SET_SEARCHTEXT(str)
+    select(str) {
+      this.SET_SEARCHTEXT(str);
       this.boxShow = false;
-      this.searchText = ""
+      this.searchText = "";
       this.$router.push({
-        name:"search"
-      })
+        name: "search"
+      });
     },
     ...mapMutations(["SET_SEARCHTEXT"])
   },
@@ -85,13 +100,22 @@ export default {
   background-color: #fff;
   position: absolute;
   top: 0;
-  height: 80px;
+  height: 70px;
   width: 100%;
-  border-bottom: 1px solid @color-line;
+  // border-bottom: 1px solid @color-line;
   z-index: 999;
   min-width: 1200px;
   transition: 0.5s;
-  & > div {
+  .filter {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: 0.5s;
+  }
+  .content {
     display: flex;
     justify-content: center;
     flex-direction: row;
@@ -99,7 +123,7 @@ export default {
   .logo {
     width: 150px;
     height: 100%;
-    line-height: 80px;
+    line-height: 70px;
     font-weight: bold;
     text-align: left;
     color: @color-theme;
@@ -114,7 +138,7 @@ export default {
     .item {
       width: 100px;
       height: 100%;
-      line-height: 80px;
+      line-height: 70px;
       text-align: center;
       float: left;
       font-size: @font-size-large;
@@ -134,18 +158,18 @@ export default {
   .search {
     width: 210px;
     height: 100%;
-    line-height: 80px;
+    line-height: 70px;
     margin-left: 5px;
     position: relative;
     input {
       box-sizing: border-box;
       padding-right: 40px;
       width: 100%;
-      border: 1px solid rgb(201, 201, 201);
-      height: 38px;
-      border-radius: 3px;
+      height: 30px;
+      border-radius: 2px;
       padding-left: 8px;
       background: #fff;
+      border: 1px solid @color-line;
     }
     .icon {
       display: inline-block;
@@ -168,28 +192,29 @@ export default {
       // animation-duration: .2s;
       // overflow: hidden;
       position: absolute;
-      top: 58px;
+      top: 49px;
       box-sizing: border-box;
-      border: 1px solid rgb(201, 201, 201);
+      border: 1px solid @color-line;
       // background-color: #ff0000;
       background-color: #fff;
       border-radius: 2px;
       // z-index: -99;
-      .s{
+      .s {
         width: 100%;
         height: 30px;
-        line-height: 30px;text-align: center;
+        line-height: 30px;
+        text-align: center;
         box-sizing: border-box;
         padding: 0 10px;
         color: #000;
         font-size: 14px;
         .no-wrap;
-        border-bottom:1px solid  rgba(0, 0, 0, .08);
-        font{
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        font {
           color: @color-theme;
         }
       }
-      h5{
+      h5 {
         width: 100%;
         height: 20px;
         line-height: 20px;
@@ -223,7 +248,8 @@ export default {
           text-align: center;
         }
       }
-      li:hover,.s:hover {
+      li:hover,
+      .s:hover {
         background-color: @color-line;
         cursor: pointer;
       }
@@ -231,7 +257,7 @@ export default {
   }
   .login {
     height: 100%;
-    line-height: 80px;
+    line-height: 70px;
     button {
       height: 40px;
       width: 40px;
@@ -239,6 +265,7 @@ export default {
       background-color: transparent;
       border: none;
       margin-left: 20px;
+      color: #000;
       &:hover {
         cursor: pointer;
         color: @color-theme;
@@ -250,6 +277,10 @@ export default {
 .box-leave-to {
   transform: translateY(-40px);
   // height: 0;
+  opacity: 0;
+}
+
+.filter-enter,.filter-leave-to{
   opacity: 0;
 }
 </style>

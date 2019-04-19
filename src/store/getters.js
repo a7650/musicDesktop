@@ -24,5 +24,6 @@ export const searchText = state => state.searchText
 
 export const searchHistory = state => state.searchHistory
 
+export const userStatus = state => state.userStatus
 
 
