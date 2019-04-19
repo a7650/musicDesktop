@@ -16,7 +16,7 @@
 <script>
 import mHeader from "base/mHeader/mHeader";
 import { createSong, getSongVkey } from "common/js/song";
-import { formateHot } from "common/js/tools";
+import { formateHot ,un_insertionSort2} from "common/js/tools";
 import { getSongList, getComment } from "api/rank";
 import { mapGetters, mapActions } from "vuex";
 import songList from "base/songList/songList";
@@ -58,12 +58,12 @@ export default {
           return;
         }
         // console.log(data.songlist);
-        this.songList = this._encaseSongList(data.songlist);
         this.title = data.topinfo.ListName;
+        this.songList = this._encaseSongList(data.songlist,id);
         // console.log(this.songList)
       });
     },
-    _encaseSongList(list) {
+    _encaseSongList(list,id) {
       let result = [],
           len = list.length,
           _seriesData = [],
@@ -71,11 +71,11 @@ export default {
       for (var i = 0; i < len; i++) {
         let item = list[i];
         if (item.data.songid && item.data.songmid) {
-          if (this.singer.id === 4) {
+          if (id == 4) {
             var _r = (parseFloat(item.in_count) * 100).toFixed(0),
                 r = _r + "%";
             this.yAxisName = "流行指数/%";
-            _seriesData.push(_r);
+            _seriesData.push(+_r);
             _xAxisData.push(item.data.songname);
           } else {
             var _r = parseInt(item.cur_count) - parseInt(item.old_count),
@@ -88,8 +88,9 @@ export default {
           result.push(createSong(item.data, "", r));
         }
       }
-      this.seriesData = _seriesData;
-      this.xAxisData = _xAxisData;
+      let chartData = un_insertionSort2(_seriesData,_xAxisData)
+      this.seriesData = chartData[0];
+      this.xAxisData = chartData[1];
       for (var j = 0; j < len; j++) {
         let item = result[j];
         getSongVkey(item.mid).then(res => {
@@ -104,47 +105,6 @@ export default {
       }
       return result;
     },
-    // _encaseSongList(list) {
-    //   let result = [];
-    //   let len = list.length;
-    //   let _seriesData=[]
-    //   let _xAxisData=[]
-    //   for (var i = 0; i < len; i++) {
-    //     let item = list[i];
-    //     if (item.data.songid && item.data.songmid) {
-    //       if (this.singer.id === 4) {
-    //         var _r = (parseFloat(item.in_count) * 100).toFixed(0);
-    //         var r = _r + "%";
-    //         this.yAxisName = "流行指数/%"
-    //         _seriesData.push(_r)
-    //         _xAxisData.push(item.data.songname)
-    //       } else {
-    //         var _r = parseInt(item.cur_count) - parseInt(item.old_count);
-    //         r = _r === 0 ? "-" : _r < 0 ? "↑ " + -_r : "↓ " + _r;
-    //         this.yAxisName = "上升指数/位"
-    //         _r<0&&_seriesData.push(-_r)&&_xAxisData.push(item.data.songname)
-    //       }
-    //       result.push(createSong(item.data, "", r));
-    //     }
-    //   }
-    //   this.seriesData=_seriesData
-    //   this.xAxisData=_xAxisData
-    //   console.log(_seriesData)
-    //   console.log(_xAxisData)
-    //   for (var j = 0; j < len; j++) {
-    //     let item = result[j];
-    //     getSongVkey(item.mid).then(res => {
-    //       let vkey = res.data.items[0].vkey;
-    //       item.src = vkey
-    //         ? `http://dl.stream.qqmusic.qq.com/C400${
-    //             item.mid
-    //           }.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`
-    //         : "";
-    //       item.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`;
-    //     });
-    //   }
-    //   return result;
-    // },
     ...mapActions(["selectSong"])
   },
   created() {

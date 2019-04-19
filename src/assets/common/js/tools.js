@@ -14,6 +14,23 @@ export function shuffle(arr) {
     return arr;
 }
 
+export   function un_insertionSort2(arr1,arr2){
+    var len=arr1.length;
+    for(var m=len-2;m>-1;m--){
+        var key1=arr1[m],
+            key2=arr2[m],
+            n=m+1;
+        while(arr1[n]>key1){
+            arr1[n-1]=arr1[n];
+            arr2[n-1]=arr2[n];
+            n++;
+        }
+        arr1[n-1]=key1;
+        arr2[n-1]=key2;
+    }
+    return [arr1,arr2]
+}
+
 export function filterArray(searchText, originArray, attribute) {
     if (searchText.trim() == "") {
         return originArray
