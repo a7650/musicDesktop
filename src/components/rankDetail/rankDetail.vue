@@ -2,7 +2,13 @@
   <div class="rank-detail">
     <div class="_content">
       <mHeader>{{title}}</mHeader>
-      <chart :title="title" :xAxisData="xAxisData" :seriesData="seriesData" :yAxisName="yAxisName"></chart>
+      <chart
+        @selectSong="_CselectSong"
+        :title="title"
+        :xAxisData="xAxisData"
+        :seriesData="seriesData"
+        :yAxisName="yAxisName"
+      ></chart>
       <songList
         :songList="songList"
         headLine="1"
@@ -10,13 +16,14 @@
         v-if="songList.length>0"
       ></songList>
     </div>
+    <float ref="float"></float>
   </div>
 </template>
 
 <script>
 import mHeader from "base/mHeader/mHeader";
 import { createSong, getSongVkey } from "common/js/song";
-import { formateHot ,un_insertionSort2} from "common/js/tools";
+import { formateHot, un_insertionSort2 } from "common/js/tools";
 import { getSongList, getComment } from "api/rank";
 import { mapGetters, mapActions } from "vuex";
 import songList from "base/songList/songList";
@@ -29,7 +36,7 @@ export default {
       xAxisData: [],
       seriesData: [],
       yAxisName: "",
-      err_message:""
+      err_message: ""
     };
   },
   computed: {
@@ -41,6 +48,17 @@ export default {
     chart
   },
   methods: {
+    _CselectSong(name) {
+      let song = this.songList.filter(item => item.name2 == name);
+      if (!song[0].src) {
+        this.float("该歌曲没有资源<br>换首别的吧^_^");
+        return;
+      }
+      this.selectSong({
+        list: song,
+        index: 0
+      });
+    },
     _selectSong(index) {
       this.selectSong({
         list: [...this.songList],
@@ -59,27 +77,27 @@ export default {
         }
         // console.log(data.songlist);
         this.title = data.topinfo.ListName;
-        this.songList = this._encaseSongList(data.songlist,id);
+        this.songList = this._encaseSongList(data.songlist, id);
         // console.log(this.songList)
       });
     },
-    _encaseSongList(list,id) {
+    _encaseSongList(list, id) {
       let result = [],
-          len = list.length,
-          _seriesData = [],
-          _xAxisData = [];
+        len = list.length,
+        _seriesData = [],
+        _xAxisData = [];
       for (var i = 0; i < len; i++) {
         let item = list[i];
         if (item.data.songid && item.data.songmid) {
           if (id == 4) {
             var _r = (parseFloat(item.in_count) * 100).toFixed(0),
-                r = _r + "%";
+              r = _r + "%";
             this.yAxisName = "流行指数/%";
             _seriesData.push(+_r);
             _xAxisData.push(item.data.songname);
           } else {
             var _r = parseInt(item.cur_count) - parseInt(item.old_count),
-                r = _r === 0 ? "-" : _r < 0 ? "↑ " + -_r : "↓ " + _r;
+              r = _r === 0 ? "-" : _r < 0 ? "↑ " + -_r : "↓ " + _r;
             this.yAxisName = "上升指数/位";
             _r < 0 &&
               _seriesData.push(-_r) &&
@@ -88,7 +106,7 @@ export default {
           result.push(createSong(item.data, "", r));
         }
       }
-      let chartData = un_insertionSort2(_seriesData,_xAxisData)
+      let chartData = un_insertionSort2(_seriesData, _xAxisData);
       this.seriesData = chartData[0];
       this.xAxisData = chartData[1];
       for (var j = 0; j < len; j++) {
@@ -100,6 +118,7 @@ export default {
                 item.mid
               }.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`
             : "";
+          item.name2 = item.name;
           item.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`;
         });
       }

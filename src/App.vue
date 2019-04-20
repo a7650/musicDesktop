@@ -1,25 +1,32 @@
 <template>
   <div class="app">
     <tab></tab>
-    <keep-alive exclude="discDetail,singerDetail,search"><router-view></router-view></keep-alive>
     <player></player>
     <button class="top" @click="top">
       <i class="icon-up"></i>
     </button>
+    <keep-alive exclude="discDetail,singerDetail,search"><router-view></router-view></keep-alive>
+    <float ref="float"></float>
   </div>
 </template>
 
 <script>
 import tab from "base/tab/tab"
 import player from "components/player/player"
-
+import float from "base/float/float"
 export default {
   components: {
-    tab,player
+    tab,player,float
   },
   methods:{
     top(){
       document.getElementById("tab").scrollIntoView();
+    },
+  },
+  mounted(){
+    var self = this
+    this.__proto__.float=function(mes){
+      self.$refs.float.float(mes)
     }
   }
 };

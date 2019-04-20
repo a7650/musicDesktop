@@ -1,12 +1,13 @@
 <template>
   <div class="tab" id="tab">
     <div class="content">
-      <div class="logo">LOGO</div>
+      <div class="logo" @click="f">LOGO</div>
       <div class="items">
-        <router-link tag="div" to="/home" replace class="item">推荐</router-link>
-        <router-link tag="div" to="/singer" replace class="item">歌手</router-link>
-        <router-link tag="div" to="/rank" replace class="item">排行榜</router-link>
-        <router-link tag="div" to="/mine" replace class="item">我的</router-link>
+        <div class="bg" :style="{'transform':`translateX(${bgX}px)`}"></div>
+        <router-link @click.native="bgX=0" tag="div" to="/home" replace class="item">推荐</router-link>
+        <router-link @click.native="bgX=100" tag="div" to="/singer" replace class="item">歌手</router-link>
+        <router-link @click.native="bgX=200" tag="div" to="/rank" replace class="item">排行榜</router-link>
+        <router-link @click.native="bgX=300" tag="div" to="/mine" replace class="item">我的</router-link>
       </div>
       <div class="search">
         <input type="text" placeholder="搜索" @focus="boxShow=true" @blur="blur" v-model="searchText">
@@ -39,21 +40,25 @@
       <div class="filter" v-show="loginShow" @click="loginShow=false"></div>
     </transition>
     <login v-show="loginShow" @close="loginShow=false"></login>
+    <float ref="float"></float>
   </div>
 </template>
 
 <script>
 import { getHotKey } from "api/search";
 import { formateHot } from "common/js/tools";
-import { mapMutations ,mapGetters} from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 import login from "components/login/login";
+
+
 export default {
   data() {
     return {
       boxShow: false,
       hotKey: [],
       searchText: "",
-      loginShow:false
+      loginShow: false,
+      bgX: 0
     };
   },
   filters: {
@@ -62,10 +67,13 @@ export default {
   components: {
     login
   },
-  computed:{
+  computed: {
     ...mapGetters(["userStatus"])
   },
   methods: {
+    f(){
+      this.float("hello")
+    },
     blur() {
       setTimeout(() => {
         this.boxShow = false;
@@ -78,6 +86,7 @@ export default {
     },
     select(str) {
       this.SET_SEARCHTEXT(str);
+      this.bgX =400;
       this.boxShow = false;
       this.searchText = "";
       this.$router.push({
@@ -88,6 +97,20 @@ export default {
   },
   created() {
     this._getHotKey();
+    let href = window.location.href,
+      n =
+        href.indexOf("/home") > -1
+          ? 0
+          : href.indexOf("/singer") > -1
+          ? 1
+          : href.indexOf("/rank") > -1
+          ? 2
+          : href.indexOf("/mine") > -1
+          ? 3
+          : href.indexOf("/search") > -1
+          ? 4
+          : 0;
+      this.bgX = n*100
   }
 };
 </script>
@@ -132,6 +155,8 @@ export default {
   .items {
     width: 400px;
     height: 100%;
+    position: relative;
+    overflow: hidden;
     &:hover {
       cursor: pointer;
     }
@@ -143,12 +168,23 @@ export default {
       float: left;
       font-size: @font-size-large;
       color: #000;
+      transition: 0.5s;
+      // position: absolute;
     }
     .item:hover {
       color: @color-theme;
     }
-    .router-link-active {
+    .bg {
+      width: 100px;
+      height: 100%;
       background-color: @color-theme;
+      transition: 0.3s;
+      position: absolute;
+      top: 0;
+      z-index: -99;
+    }
+    .router-link-active {
+      // background-color: @color-theme;
       color: #fff;
     }
     .router-link-active:hover {
@@ -260,7 +296,7 @@ export default {
     line-height: 70px;
     button {
       height: 40px;
-      width: 40px;
+      width: 50px;
       border-radius: 2px;
       background-color: transparent;
       border: none;
@@ -280,7 +316,8 @@ export default {
   opacity: 0;
 }
 
-.filter-enter,.filter-leave-to{
+.filter-enter,
+.filter-leave-to {
   opacity: 0;
 }
 </style>

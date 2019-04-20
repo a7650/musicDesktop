@@ -53,6 +53,11 @@ export default new Router({
       name:'search',
       path:'/search',
       component:()=>import('components/search/search')
+    },
+    {
+      name:"adm",
+      path:"/adm",
+      component:()=>import('components/adm/adm')
     }
   ]
 })

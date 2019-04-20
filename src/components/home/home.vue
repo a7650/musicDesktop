@@ -9,6 +9,7 @@
         v-for="(item,index) in recommendList"
         :key="item.item_id"
       >{{item.item_name}}</li>
+      <li :class="{active:discIndex===10}" class="item recommend" @click="selectRecommend">推荐歌曲</li>
     </ul>
     <!-- <div v-for="item in recommendItem"></div> -->
     <div class="discDetail">
@@ -42,6 +43,9 @@
       <keep-alive>
         <discList @selectDiscItem="selectDiscItem" v-show="discIndex===9" :discList="discList[9]"></discList>
       </keep-alive>
+      <keep-alive>
+        <recommend-list v-if="discIndex===10"></recommend-list>
+      </keep-alive>
     </div>
     <router-view></router-view>
   </div>
@@ -54,6 +58,7 @@ import { mapMutations } from "vuex";
 import mHeader from "base/mHeader/mHeader";
 import { shuffle } from "common/js/tools";
 import allList from "./allList.js"
+import recommendList from "components/recommendList/recommendList"
 export default {
   data() {
     return {
@@ -74,9 +79,13 @@ export default {
   },
   components: {
     discList,
-    mHeader
+    mHeader,
+    recommendList
   },
   methods: {
+    selectRecommend(){
+      this.discIndex = 10
+    },
     selectDiscItem(item) {
       this.$router.push({
         name: "discDetail",
@@ -122,15 +131,22 @@ export default {
     align-items: center;
     min-width: 1200px;
     .item {
-      width: 100px;
+      // width: 100px;
       text-align: center;
       height: 100%;
       line-height: 30px;
+      padding: 2px 15px;
+      margin-right: 20px;
+      border-radius: 16px;
+      user-select: none;
+      font-size: 14px;
+
     }
     .active {
-      color: @color-theme;
+      background-color: @color-theme2;
+      color:#fff;
     }
-    .item:hover {
+    .item:not(.active):hover {
       color: @color-theme;
       cursor: pointer;
     }
@@ -142,5 +158,8 @@ export default {
     padding-left: 20px;
     margin: 0 auto;
   }
+}
+.recommend{
+  margin: 0;
 }
 </style>

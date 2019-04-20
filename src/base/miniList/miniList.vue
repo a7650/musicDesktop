@@ -72,12 +72,19 @@ export default {
   right: 0;
   overflow-y: scroll;
 }
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background-color: lighten(@color-theme2, 25%);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: lighten(@color-theme2, 15%);
+    }
 ul {
   li {
     width: 100%;
     box-sizing: border-box;
     padding: 10px 3%;
-    color: @color-text-dd;
+    color: @color-text-d;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     span {
       box-sizing: border-box;
@@ -111,21 +118,22 @@ ul {
       }
     }
   }
-  li:hover{
-    background-color: #000;
+  li:hover {
+    background-color: darken(@color-theme2, 3%);
     cursor: pointer;
   }
-  li:not(.c-song):hover>.song-name,li:not(.c-song):hover>.singer{
-      color: rgb(224, 224, 224);
+  li:not(.c-song):hover > .song-name,
+  li:not(.c-song):hover > .singer {
+    color: #fff;
   }
   .c-song {
-      background-color: #000;
-      .song-name{
-        color: rgb(255, 0, 0);
-      }
-      .singer{
-        color: #fff;
-      }
+    background-color: darken(@color-theme2, 6%);
+    .song-name {
+      color: @color-theme;
     }
+    .singer {
+      color: #fff;
+    }
+  }
 }
 </style>

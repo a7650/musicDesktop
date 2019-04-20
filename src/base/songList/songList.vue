@@ -12,7 +12,7 @@
           class="song item"
           v-for="(item,index) in songList"
           :key="item.id"
-          @click="selectSong(index,item.src)"
+          @click.stop="selectSong(index,item.src,$event)"
         >
           <div class="index">
             <div class="_index">{{index+baseIndex}}</div>
@@ -55,9 +55,9 @@ export default {
     ...mapGetters(["currentSong"])
   },
   methods: {
-    selectSong(index, src) {
+    selectSong(index, src,e) {
       if (!src) return;
-      this.$emit("selectSong", index);
+      this.$emit("selectSong", index,e);
     }
   }
 };

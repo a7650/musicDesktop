@@ -14,6 +14,7 @@ export function getHotKey() {
 }
 
 export function search(query,page,perpage,zhida) {
+    // const url = 'http://localhost:8002/api/search'
     const url = PRODUCTION ? 'http://106.12.198.147/music/api/getSearch' : '/getSearch'
     const data = Object.assign({}, commonParams, {
       w: query,

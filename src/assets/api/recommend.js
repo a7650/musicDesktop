@@ -78,3 +78,12 @@ export function getDiscSongList(tid) {
     return Promise.resolve(data.data.cdlist[0]);
   })
 }
+
+export function getRecommend(){
+  // const url ='http://localhost:8002/api/getRecommend';
+  const url = PRODUCTION ? 'http://106.12.198.147/music2/api/getRecommend' : 'http://localhost:8002/api/getRecommend';
+  return axios.get(url)
+    .then(data=>{
+        return Promise.resolve(data.data)
+    })
+}

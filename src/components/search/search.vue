@@ -1,9 +1,6 @@
 <template>
   <div class="page-search">
     <div class="search">
-      <div class="bg">
-        <img src="./bg.jpg" alt>
-      </div>
       <div class="input-content">
         <input type="text" v-model="i_searchText" @focus="historyShow=true" @blur="historyHide">
         <button @click="_search">搜 索</button>
@@ -220,19 +217,7 @@ export default {
   position: relative;
   perspective:1000px;
   z-index: 99;
-  .bg {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    img {
-      filter: blur(40px);
-      position: relative;
-      top: -20%;
-      left: -20%;
-      width: 140%;
-      height: 140%;
-    }
-  }
+  background-color: @color-theme2;
   .input-content {
     position: absolute;
     top: 50%;
@@ -248,14 +233,18 @@ export default {
       background-color: #fff;
       box-sizing: border-box;
       padding-left: 10px;
+      border-radius: 20px;
     }
     button {
       width: 70px;
       height: 100%;
       // margin-top: -5px;
       background-color: @color-theme;
+      border-radius: 20px;
       color: #fff;
       border: none;
+      margin-left: 15px;
+      box-shadow: 0 0 10px @color-theme;
 
     }
     button:hover {
@@ -266,12 +255,12 @@ export default {
   }
 }
 .search-history {
-  width: 500px;
+  width: 470px;
   background-color: #fff;
   position: absolute;
   top: 39px;
   left: 50%;
-  margin-left: -285px;
+  margin-left: -278px;
   border-top: 1px solid @color-line;
   z-index: 99;
   padding:5px 0;
@@ -364,16 +353,16 @@ export default {
     position: absolute;
     top: -10%;
     left: -10%;
-    filter: blur(30px);
+    filter: blur(10px);
     img {
       width: 100%;
-      height: 100%;
+      // height: 100%;
     }
   }
   .filter {
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
     position: absolute;
     top: 0;
     left: 0;
@@ -391,6 +380,7 @@ export default {
       width: 50px;
       height: 50px;
       border-radius: 25px;
+      // box-shadow: 0 0 20px @color-theme;
     }
     .text {
       height: 50px;

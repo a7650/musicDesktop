@@ -103,7 +103,7 @@ export default {
         index: 0
       });
     },
-    _selectSong(index, filterList) {
+    _selectSong(index) {
       this.selectSong({
         list: [...this.songList],
         index
