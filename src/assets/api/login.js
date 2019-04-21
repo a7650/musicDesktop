@@ -1,11 +1,9 @@
-import crypto from "crypto";
+// import crypto from "crypto";
 import axios from "axios"
 import {PRODUCTION } from './config'
 
 function getHash(val) {
-    let hash = crypto.createHash("sha256");
-    hash.update(val);
-    return hash.digest("hex");
+    return CryptoJS.SHA256(val).toString()
 }
 
 export function login({name,password}){

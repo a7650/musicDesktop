@@ -1,8 +1,10 @@
 const axios = require('axios')
 const path = require('path')
+const CompressionPlugin = require('compression-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 function resolve(dir) {
-  console.log(__dirname)
+  // console.log(__dirname)
   return path.join(__dirname, dir)
 }
 module.exports = {
@@ -145,6 +147,29 @@ module.exports = {
         'api': resolve('src/assets/api'),
         'base': 'src/base'
       }
+    },
+    plugins: [
+      new CompressionPlugin({
+        test: /\.js$|\.html$|\.css/,
+        threshold: 10240
+        // deleteOriginAssets:false
+      }),
+      new BundleAnalyzerPlugin({
+        analyzerMode: "server",
+        analyzerHost: "127.0.0.1",
+        analyzerPort: 8888,
+        reportFilename: "report.html",
+        defaultSizes: "parsed",
+        openAnalyzer: false,
+        generateStatsFile: false,
+        statsFilename: "stats.json",
+        statsOptions: null,
+        logLevel: "info"
+      })
+    ],
+    externals: {
+      "echarts": "echarts",
+      "crypto": "CryptoJS"
     }
   }
 }

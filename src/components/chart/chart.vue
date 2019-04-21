@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import echarts from "echarts";
+// import echarts from "echarts"
 const formatter1 = "{b}:{c}%<br>点击即可播放该歌曲";
 const formatter2 = "{b}:本周上升{c}位<br>点击即可播放该歌曲";
 const option = {
