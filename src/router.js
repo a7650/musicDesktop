@@ -15,28 +15,28 @@ export default new Router({
       path: '/home',
       component: () => import('components/home/home'),
     },
-      {
-        name:'discDetail',
-        path:'/home/:id',
-        component:()=>import('components/discDetail/discDetail')
-      },
+    {
+      name: 'discDetail',
+      path: '/home/:id',
+      component: () => import('components/discDetail/discDetail')
+    },
     {
       path: '/singer',
       component: () => import('components/singer/singer')
     },
     {
-      name:'singerDetail',
+      name: 'singerDetail',
       path: '/singer/:id',
       component: () => import('components/singerDetail/singerDetail')
     },
     {
       path: '/rank',
       component: () => import('components/rank/rank'),
-      children:[
+      children: [
         {
-          name:'rankDetail',
-          path:':id',
-          component:()=>import('components/rankDetail/rankDetail')
+          name: 'rankDetail',
+          path: ':id',
+          component: () => import('components/rankDetail/rankDetail')
         }
       ]
     },
@@ -45,19 +45,34 @@ export default new Router({
       component: () => import('components/mine/mine')
     },
     {
-      name:'discDetail_mine',
-      path:'/mine/:id',
-      component:()=>import('components/discDetail/discDetail')
+      name: 'discDetail_mine',
+      path: '/mine/:id',
+      component: () => import('components/discDetail/discDetail')
     },
     {
-      name:'search',
-      path:'/search',
-      component:()=>import('components/search/search')
+      name: 'search',
+      path: '/search',
+      component: () => import('components/search/search')
     },
     {
-      name:"adm",
-      path:"/adm",
-      component:()=>import('components/adm/adm')
+      name: "adm",
+      path: "/adm",
+      component: () => import('components/adm/index')
+    },
+    {
+      name: 'admSong',
+      path: '/adm/song',
+      component: () => import('components/adm/song')
+    },
+    {
+      name: 'admUser',
+      path: '/adm/user',
+      component: () => import('components/adm/user')
+    },
+    {
+      name: 'admSinger',
+      path: '/adm/singer',
+      component: () => import('components/adm/singer')
     }
   ]
 })

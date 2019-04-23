@@ -103,21 +103,20 @@ export function getSongVkey(songmid) {
 
 export function _encaseSongList(list, data) {
     let result = [];
-    list.forEach((item) => {
+    list.forEach((item, i) => {
         let ITEM = item;
         if (data) {
             ITEM = item[data]
         }
         if (ITEM.songid && ITEM.songmid) {
-            result.push(createSong(ITEM))
+            result.push(createSong(ITEM));
+            let song = result[i];
+            getSongVkey(song.mid).then((res) => {
+                let vkey = res.data.items[0].vkey;
+                song.src = vkey ? `http://dl.stream.qqmusic.qq.com/C400${song.mid}.m4a?fromtag=38&guid=5931742855&vkey=${vkey}` : "";
+                song.name = vkey ? song.name : `<del>${song.name}(暂无音源)</del>`
+            })
         }
-    })
-    result.forEach((item) => {
-        getSongVkey(item.mid).then((res) => {
-            let vkey = res.data.items[0].vkey;
-            item.src = vkey ? `http://dl.stream.qqmusic.qq.com/C400${item.mid}.m4a?fromtag=38&guid=5931742855&vkey=${vkey}` : "";
-            item.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`
-        })
     })
     return result;
 }

@@ -54,7 +54,7 @@ export default {
   left: 50%;
   margin-left: -110px;
   margin-top: -60px;
-  transition: .2s;
+  transition: 0.2s;
   .mes {
     width: 100%;
     text-align: center;
@@ -68,12 +68,12 @@ export default {
   }
 }
 
-.float-enter-active{
-  animation: float .4s;
+.float-enter-active {
+  animation: float 0.4s;
 }
 
-.float-leave-to{
-  transform: scale(.8);
+.float-leave-to {
+  transform: scale(0.8);
   opacity: 0;
 }
 

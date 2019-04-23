@@ -2,7 +2,13 @@
   <div class="time-control">
     <div class="process" ref="process">
       <div class="played" ref="played"></div>
-      <div class="now" ref="now" @mousedown="processTouchStart"  @mouseenter="processEnter"  @mouseleave="processLeave">
+      <div
+        class="now"
+        ref="now"
+        @mousedown="processTouchStart"
+        @mouseenter="processEnter"
+        @mouseleave="processLeave"
+      >
         <div class="tips" v-if="processing">{{this.processTime|formateTime}}</div>
       </div>
     </div>
@@ -12,7 +18,7 @@
 </template>
 
 <script>
-import {formateTime} from "common/js/tools"
+import { formateTime } from "common/js/tools";
 export default {
   data() {
     return {
@@ -20,31 +26,30 @@ export default {
       processing: false
     };
   },
-  props:{
-    currentTime:{
-      type:null,
-      default:0
+  props: {
+    currentTime: {
+      type: null,
+      default: 0
     },
-    duration:{
-      type:null,
-      default:0
+    duration: {
+      type: null,
+      default: 0
     }
   },
-  filters:{
+  filters: {
     formateTime
   },
   methods: {
-    processEnter(e){
-      e.currentTarget.classList.add('an-enter')
+    processEnter(e) {
+      e.currentTarget.classList.add("an-enter");
     },
-    processLeave(e){
-      if(!this.touch.init){
-        e.currentTarget.classList.remove('an-enter')
+    processLeave(e) {
+      if (!this.touch.init) {
+        e.currentTarget.classList.remove("an-enter");
       }
-
     },
     processTouchStart(e) {
-      this.$refs.now.classList.add('an-enter')
+      this.$refs.now.classList.add("an-enter");
       this.touch.init = true;
       this.touch.startX = e.pageX;
       this.touch.playedX = this.$refs.played.clientWidth;
@@ -69,7 +74,7 @@ export default {
       if (!this.touch.init) {
         return;
       }
-      this.$refs.now.classList.remove('an-enter')
+      this.$refs.now.classList.remove("an-enter");
       this.touch.init = false;
       this.processing = false;
       this.$emit("turnProcess", this.processTime);
@@ -94,9 +99,9 @@ export default {
   created() {
     this.touch = {};
   },
-  mounted(){
-    window.addEventListener("mouseup",this.processTouchEnd)
-    window.addEventListener("mousemove",this.processTouchMove)
+  mounted() {
+    window.addEventListener("mouseup", this.processTouchEnd);
+    window.addEventListener("mousemove", this.processTouchMove);
   }
 };
 </script>
@@ -117,10 +122,10 @@ export default {
     // line-height: 30px;
     font-size: @font-size-medium;
   }
-  .current-time{
+  .current-time {
     text-align: right;
   }
-  .total-time{
+  .total-time {
     text-align: left;
     color: @color-text-dd;
   }
@@ -134,7 +139,7 @@ export default {
     .played {
       width: 0;
       height: 100%;
-      background:@color-theme;
+      background: @color-theme;
       border-radius: 5px;
     }
     .now {
@@ -159,13 +164,13 @@ export default {
         left: -19px;
         top: -25px;
         transform-origin: bottom;
-        transform:scale(.7);
+        transform: scale(0.7);
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       }
     }
-    .an-enter{
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-      animation: enter .3s;
+    .an-enter {
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+      animation: enter 0.3s;
       animation-fill-mode: forwards;
     }
     .now:hover {
@@ -177,10 +182,10 @@ export default {
   }
 }
 @keyframes enter {
-  30%{
-    transform: scale(.8);
+  30% {
+    transform: scale(0.8);
   }
-  100%{
+  100% {
     transform: scale(1.4);
   }
 }

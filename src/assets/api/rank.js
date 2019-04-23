@@ -36,6 +36,8 @@ export function getSongList(topid) {
     });
     return jsonp(url, data, options);
 }
+
+
 export function getComment(topid, pagenum, pagesize) {
     const url = 'https://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg'
     const data = Object.assign({}, commonParams, {

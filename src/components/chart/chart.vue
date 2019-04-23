@@ -17,7 +17,7 @@ const option = {
     // data:['销量']
   },
 
-  color:["rgb(255, 34, 83)"],
+  color: ["rgb(255, 34, 83)"],
 
   xAxis: {
     //   data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
@@ -60,7 +60,7 @@ const option = {
     emphasis: {
       iconStyle: {
         // color: "rgb(255, 34, 83)",
-        borderColor:"rgb(255, 34, 83)"
+        borderColor: "rgb(255, 34, 83)"
       }
     }
   }
@@ -72,11 +72,11 @@ export default {
     return {};
   },
   mounted() {
-    let self = this
+    let self = this;
     this.Chart = echarts.init(document.getElementById("main"));
-    this.Chart.on('click', function (params) {
-    self.$emit("selectSong",params.name)
-});
+    this.Chart.on("click", function(params) {
+      self.$emit("selectSong", params.name);
+    });
   },
   watch: {
     title() {

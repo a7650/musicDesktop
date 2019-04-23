@@ -60,7 +60,7 @@ import loading from "base/loading/loading";
 import pageControl from "base/pageControl/pageControl";
 import login from "components/login/login";
 import { addSingle, addAll } from "api/adm";
-import { constants } from "fs";
+
 let timer = null;
 const prePage = 15;
 export default {
@@ -279,7 +279,7 @@ export default {
 }
 .right {
   background-color: @color-background-d;
-  overflow-y:scroll;
+  overflow-y: scroll;
   height: 100%;
 }
 .search {

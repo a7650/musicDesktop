@@ -1,13 +1,11 @@
 <template>
-    <header>
-        <slot></slot>
-    </header>
+  <header>
+    <slot></slot>
+  </header>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style lang="less" scoped>
@@ -21,6 +19,6 @@ header {
   text-align: center;
   font-size: 26px;
   font-weight: 600;
-//   min-width: 1200px;
+  //   min-width: 1200px;
 }
 </style>

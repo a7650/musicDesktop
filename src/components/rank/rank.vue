@@ -42,7 +42,9 @@
         <i class="icon-right" @click="right"></i>
       </div>
     </div>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 <script>
@@ -58,7 +60,7 @@ export default {
       pageNum: 1,
       page: 1,
       active: -1,
-      rotate:0
+      rotate: 0
     };
   },
   components: {
@@ -70,11 +72,11 @@ export default {
       return val.replace("巅峰榜·", "");
     }
   },
-  computed:{
-    filterList(){
-      return this.topList.filter(item=>{
-        return item.id!==201
-      })
+  computed: {
+    filterList() {
+      return this.topList.filter(item => {
+        return item.id !== 201;
+      });
     }
   },
   methods: {
@@ -87,12 +89,13 @@ export default {
           1080}px)`;
       }
     },
-    right(){
-      if(this.page==this.pageNum){
-        return
-      }else{
+    right() {
+      if (this.page == this.pageNum) {
+        return;
+      } else {
         this.page++;
-        this.$refs.items.style.transform=`translateX(${-(this.page-1)*1080}px)`
+        this.$refs.items.style.transform = `translateX(${-(this.page - 1) *
+          1080}px)`;
       }
     },
     _getRankList() {
@@ -127,7 +130,12 @@ export default {
   },
   activated() {
     if (this.active > -1) {
-      this.selectList(this.active);
+      this.$router.replace({
+        name: "rankDetail",
+        params: {
+          id: this.active
+        }
+      });
     }
   }
 };
@@ -144,10 +152,10 @@ export default {
   // min-width: 1200px;
   padding-bottom: 100px;
 }
-.header{
+.header {
   min-width: 1200px;
 }
-.content{
+.content {
   width: 100%;
   height: 520px;
   position: relative;
@@ -174,14 +182,14 @@ export default {
     min-height: 100%;
   }
 }
-    .filter {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      background-color: #000;
-      opacity: .2;
-    }
+.filter {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  background-color: #000;
+  opacity: 0.2;
+}
 ._bg {
   position: absolute;
   width: 100%;
@@ -193,7 +201,7 @@ export default {
   height: 100%;
   box-sizing: border-box;
   padding-top: 35px;
-  transition: .8s;
+  transition: 0.8s;
   user-select: none;
   .item {
     color: #fff;
@@ -205,7 +213,7 @@ export default {
     float: left;
     position: relative;
     // box-shadow: 0 0 7px rgba(0, 0, 0, 1);
-    transition: .2s;
+    transition: 0.2s;
     transform-origin: center;
     border-radius: 2px;
     .name {
@@ -214,7 +222,7 @@ export default {
       font-size: 30px;
       text-align: center;
       margin-top: 30px;
-      transition: .2s;
+      transition: 0.2s;
     }
     .icon {
       width: 100%;
@@ -228,17 +236,16 @@ export default {
       }
     }
   }
-  .active{
+  .active {
     transform: scale(1.05);
   }
-  .item:hover{
+  .item:hover {
     cursor: pointer;
     transform: scale(1.05);
   }
   // ._bg:hover>.name{
   //   color: @color-theme;
   // }
-
 }
 ._items {
   margin-top: 40px;
@@ -264,27 +271,27 @@ export default {
     }
   }
 }
-.move{
+.move {
   height: 100%;
   width: 50px;
   line-height: 520px;
   text-align: center;
   z-index: 99;
   flex: 1;
-  i{
+  i {
     color: #000;
-    opacity: .2;
+    opacity: 0.2;
     font-size: 50px;
     font-weight: bold;
-    transition: .3s;
+    transition: 0.3s;
   }
-  i:hover{
+  i:hover {
     opacity: 1;
     cursor: pointer;
   }
 }
 
-.dots{
+.dots {
   width: 100%;
   height: 20px;
   text-align: center;
@@ -292,22 +299,21 @@ export default {
   bottom: 0;
   left: 0;
   line-height: 20px;
-  .dot{
+  .dot {
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color:#00000029;
-    transition: .3s;
+    background-color: #00000029;
+    transition: 0.3s;
     display: inline-block;
     margin-right: 10px;
   }
-  .dot:last-child{
+  .dot:last-child {
     margin: 0;
   }
-  .active{
+  .active {
     width: 16px;
     background-color: #000000b5;
   }
 }
-
 </style>

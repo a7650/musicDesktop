@@ -33,7 +33,7 @@
         :songList="songList[currentPage]"
         v-if="songList[currentPage].length>0"
       ></songList>
-      <loading  v-else></loading>
+      <loading v-else></loading>
     </div>
 
     <pageControl
@@ -85,8 +85,8 @@ export default {
     ...mapGetters(["singer"])
   },
   methods: {
-    selectPage(n){
-        this.currentPage = n;
+    selectPage(n) {
+      this.currentPage = n;
     },
     _selectSong(index, filterList) {
       this.selectSong({

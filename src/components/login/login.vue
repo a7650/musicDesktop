@@ -1,49 +1,53 @@
 <template>
- <transition name="login">
-      <div class="user-login">
-    <div class="window login-window" v-show="window===1">
-      <header>登录</header>
-      <div class="header-line"></div>
-      <div class="name1 name">
-        <h5>用户名</h5>
-        <input type="text" v-model="name1" ref="name1" @blur="checkName1">
+  <transition name="login">
+    <div class="user-login">
+      <div class="window login-window" v-show="window===1">
+        <header>登录</header>
+        <div class="header-line"></div>
+        <div class="name1 name">
+          <h5>用户名</h5>
+          <input type="text" v-model="name1" ref="name1" @blur="checkName1">
+        </div>
+        <div class="pas1 pas">
+          <h5>密码</h5>
+          <input type="password" v-model="pas1" ref="pas1">
+        </div>
+        <div class="tip" v-html="tip1"></div>
+        <button class="login" @click="_login">
+          <i class="icon-right"></i>
+        </button>
+        <div class="more">
+          <span @click="window=2">注册账号</span>
+          <!-- <span>忘记密码</span> -->
+        </div>
       </div>
-      <div class="pas1 pas">
-        <h5>密码</h5>
-        <input type="password" v-model="pas1" ref="pas1">
-      </div>
-      <div class="tip" v-html="tip1"></div>
-      <button class="login" @click="_login"><i class="icon-right"></i></button>
-      <div class="more">
-        <span @click="window=2">注册账号</span>
-        <!-- <span>忘记密码</span> -->
+      <div class="window register-window" v-show="window===2">
+        <header>注册</header>
+        <div class="header-line"></div>
+        <div class="name2-tip">用户名需以字母开头,且至少4位</div>
+        <div class="name2 name">
+          <h5>用户名</h5>
+          <input type="text" v-model="name2" ref="name2" @blur="checkName2">
+        </div>
+        <div class="pas2 pas">
+          <h5>密码</h5>
+          <input type="password" v-model="pas2" ref="pas2">
+        </div>
+        <div class="tip" v-html="tip2"></div>
+        <button class="register" @click="_register">
+          <i class="icon-right"></i>
+        </button>
+        <div class="more more2">
+          <span class="back" @click="window=1">返回登录界面</span>
+        </div>
       </div>
     </div>
-    <div class="window register-window" v-show="window===2">
-      <header>注册</header>
-      <div class="header-line"></div>
-      <div class="name2-tip">用户名需以字母开头,且至少4位</div>
-      <div class="name2 name">
-        <h5>用户名</h5>
-        <input type="text" v-model="name2" ref="name2" @blur="checkName2">
-      </div>
-      <div class="pas2 pas">
-        <h5>密码</h5>
-        <input type="password" v-model="pas2" ref="pas2">
-      </div>
-      <div class="tip" v-html="tip2"></div>
-      <button class="register" @click="_register"><i class="icon-right"></i></button>
-      <div class="more more2">
-        <span class="back" @click="window=1">返回登录界面</span>
-      </div>
-    </div>
-  </div>
- </transition>
+  </transition>
 </template>
 
 <script>
 import { login, register } from "api/login";
-import {mapMutations} from "vuex"
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -104,11 +108,11 @@ export default {
         return;
       }
       this.tip1 = "正在登录...";
-      login({ name: this.name1, password: this.pas1 }).then(data=>{
-        this.tip1 = data.mes
-        if(data.type){
-          this.SET_USERSTATUS(name)
-          this.$emit("close")
+      login({ name: this.name1, password: this.pas1 }).then(data => {
+        this.tip1 = data.mes;
+        if (data.type) {
+          this.SET_USERSTATUS(name);
+          this.$emit("close");
         }
       });
     },
@@ -125,10 +129,10 @@ export default {
         return;
       }
       this.tip2 = "数据已提交服务器,请稍等...";
-      register({ name: this.name2, password: this.pas2 }).then(data=>{
+      register({ name: this.name2, password: this.pas2 }).then(data => {
         this.tip2 = data.mes;
-        if(data.type){
-          this.name1=this.name2;
+        if (data.type) {
+          this.name1 = this.name2;
           this.pas1 = this.pas2;
         }
       });
@@ -142,25 +146,25 @@ export default {
 @import "~common/less/variable.less";
 @import "~common/less/mixin.less";
 .user-login {
-//   position: fixed;
-//   top: 0;
-//   bottom: 0;
-//   left: 0;
-//   right: 0;
-    transition: 0.2s;
-    transform-origin: center;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      margin: -200px 0 0 -150px;
+  //   position: fixed;
+  //   top: 0;
+  //   bottom: 0;
+  //   left: 0;
+  //   right: 0;
+  transition: 0.2s;
+  transform-origin: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin: -200px 0 0 -150px;
 }
 .window {
   width: 260px;
   // border:1px solid black;
   background-color: #fff;
-  padding:20px 15px 10px;
+  padding: 20px 15px 10px;
   border-radius: 2px;
-  box-shadow: 0 0 15px rgba(0,0,0,.2);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   text-align: center;
 
   header {
@@ -185,15 +189,14 @@ export default {
   }
   .name,
   .pas {
-      h5{
-    text-align: left;
-    font-size: 12px;
-    margin-left: 5px;
-    color: @color-text-dd;
-    transition: .3s;
-    width: 50px;
-    
-  }
+    h5 {
+      text-align: left;
+      font-size: 12px;
+      margin-left: 5px;
+      color: @color-text-dd;
+      transition: 0.3s;
+      width: 50px;
+    }
     width: 100%;
     height: 50px;
     // line-height: 50px;
@@ -203,24 +206,24 @@ export default {
       position: absolute;
       left: 0;
       width: 100%;
-      height:30px;
+      height: 30px;
       background-color: #fff;
       // border-radius: 5px;
       box-sizing: border-box;
       padding-left: 5px;
       border-bottom: 2px solid @color-line;
-      transition: .2s;
-      font-size: @font-size-large;;
+      transition: 0.2s;
+      font-size: @font-size-large;
     }
-    h5:hover{
+    h5:hover {
       color: @color-theme;
       font-size: 16px;
     }
-    input:focus{
-     border-bottom: 6px solid  @color-theme;
+    input:focus {
+      border-bottom: 6px solid @color-theme;
     }
   }
-  .name{
+  .name {
     margin-top: 20px;
   }
   .pas {
@@ -245,15 +248,15 @@ export default {
     border: none;
     color: #fff;
     transform-origin: center;
-    transition: .2s;
+    transition: 0.2s;
     font-size: 20px;
     font-weight: bold;
   }
   button:hover {
-     box-shadow: 0 0 30px rgba(250, 2, 2, 0.7);
+    box-shadow: 0 0 30px rgba(250, 2, 2, 0.7);
     // background-color: #000;
     cursor: pointer;
-    transform: scale(1.1)
+    transform: scale(1.1);
   }
   .more {
     width: 100%;
@@ -272,15 +275,15 @@ export default {
   }
 }
 
-.login-enter-active{
-  animation: login .4s;
+.login-enter-active {
+  animation: login 0.4s;
 }
-.login-leave-to{
-  transform: scale(.3);
+.login-leave-to {
+  transform: scale(0.3);
   opacity: 0;
 }
 
-@keyframes login{
+@keyframes login {
   0% {
     opacity: 0;
     transform: scale(0);

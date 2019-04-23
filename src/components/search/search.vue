@@ -6,18 +6,19 @@
         <button @click="_search">搜 索</button>
         <transition name="a">
           <div class="search-history" v-show="searchHistory.length&&historyShow">
-          <ul>
-            <li>
-              <span class="title">搜索历史</span><span class="clear-all" @click="CLEAR_SEARCHHISTORY({flag:true})">清空</span>
-            </li>
-            <li v-for="(item,index) in searchHistory" :key="item">
-              <span class="name" @click="_selectHistory(item)">{{item}}</span>
-              <span class="clear" @click="_clearHistory(index)">
-                <i class="icon-false"></i>
-              </span>
-            </li>
-          </ul>
-        </div>
+            <ul>
+              <li>
+                <span class="title">搜索历史</span>
+                <span class="clear-all" @click="CLEAR_SEARCHHISTORY({flag:true})">清空</span>
+              </li>
+              <li v-for="(item,index) in searchHistory" :key="item">
+                <span class="name" @click="_selectHistory(item)">{{item}}</span>
+                <span class="clear" @click="_clearHistory(index)">
+                  <i class="icon-false"></i>
+                </span>
+              </li>
+            </ul>
+          </div>
         </transition>
       </div>
     </div>
@@ -215,7 +216,7 @@ export default {
   width: 100%;
   height: 240px;
   position: relative;
-  perspective:1000px;
+  perspective: 1000px;
   z-index: 99;
   background-color: @color-theme2;
   .input-content {
@@ -245,7 +246,6 @@ export default {
       border: none;
       margin-left: 15px;
       box-shadow: 0 0 10px @color-theme;
-
     }
     button:hover {
       background-color: @color-theme;
@@ -263,9 +263,9 @@ export default {
   margin-left: -278px;
   border-top: 1px solid @color-line;
   z-index: 99;
-  padding:5px 0;
-  transform-origin:50% 0;
-  transition: .3s;
+  padding: 5px 0;
+  transform-origin: 50% 0;
+  transition: 0.3s;
   li {
     height: 25px;
     width: 100%;
@@ -286,34 +286,34 @@ export default {
     .clear {
       width: 10%;
       text-align: center;
-      color:#fff;
+      color: #fff;
     }
     .clear:hover {
       color: #000;
     }
   }
-  li:first-child{
+  li:first-child {
     height: 20px;
     font-size: 14px;
-    color:@color-text-dd;
+    color: @color-text-dd;
     text-align: center;
     line-height: 20px;
-    span{
+    span {
       line-height: 20px;
     }
-    .title{
+    .title {
       width: 90%;
       box-sizing: border-box;
       padding-left: 10px;
       text-align: left;
     }
-    .clear-all{
+    .clear-all {
       width: 10%;
       box-sizing: border-box;
       padding-right: 10px;
       text-align: right;
     }
-    .clear-all:hover{
+    .clear-all:hover {
       color: @color-theme;
     }
   }
@@ -404,9 +404,9 @@ export default {
   cursor: pointer;
 }
 
-.a-enter,.a-leave-to{
+.a-enter,
+.a-leave-to {
   transform: rotateX(90deg);
   opacity: 0.3;
 }
-
 </style>

@@ -72,13 +72,13 @@ export default {
   right: 0;
   overflow-y: scroll;
 }
-    ::-webkit-scrollbar-thumb {
-      border-radius: 10px;
-      background-color: lighten(@color-theme2, 25%);
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background-color: lighten(@color-theme2, 15%);
-    }
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: lighten(@color-theme2, 25%);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: lighten(@color-theme2, 15%);
+}
 ul {
   li {
     width: 100%;

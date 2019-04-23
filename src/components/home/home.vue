@@ -6,43 +6,20 @@
         class="item"
         :class="{active:index===discIndex}"
         @click="selectDisc(index)"
-        v-for="(item,index) in recommendList"
+        v-for="(item,index) in _allList"
         :key="item.item_id"
       >{{item.item_name}}</li>
       <li :class="{active:discIndex===10}" class="item recommend" @click="selectRecommend">推荐歌曲</li>
     </ul>
     <!-- <div v-for="item in recommendItem"></div> -->
     <div class="discDetail">
-      <keep-alive>
-        <discList @selectDiscItem="selectDiscItem" v-show="discIndex===0" :discList="discList[0]"></discList>
-      </keep-alive>
-      <keep-alive>
-        <discList @selectDiscItem="selectDiscItem" v-show="discIndex===1" :discList="discList[1]"></discList>
-      </keep-alive>
-      <keep-alive>
-        <discList @selectDiscItem="selectDiscItem" v-show="discIndex===2" :discList="discList[2]"></discList>
-      </keep-alive>
-      <keep-alive>
-        <discList @selectDiscItem="selectDiscItem" v-show="discIndex===3" :discList="discList[3]"></discList>
-      </keep-alive>
-      <keep-alive>
-        <discList @selectDiscItem="selectDiscItem" v-show="discIndex===4" :discList="discList[4]"></discList>
-      </keep-alive>
-      <keep-alive>
-        <discList @selectDiscItem="selectDiscItem" v-show="discIndex===5" :discList="discList[5]"></discList>
-      </keep-alive>
-      <keep-alive>
-        <discList @selectDiscItem="selectDiscItem" v-show="discIndex===6" :discList="discList[6]"></discList>
-      </keep-alive>
-      <keep-alive>
-        <discList @selectDiscItem="selectDiscItem" v-show="discIndex===7" :discList="discList[7]"></discList>
-      </keep-alive>
-      <keep-alive>
-        <discList @selectDiscItem="selectDiscItem" v-show="discIndex===8" :discList="discList[8]"></discList>
-      </keep-alive>
-      <keep-alive>
-        <discList @selectDiscItem="selectDiscItem" v-show="discIndex===9" :discList="discList[9]"></discList>
-      </keep-alive>
+      <discList
+        v-for="(item,index) in discList"
+        :key="index"
+        @selectDiscItem="selectDiscItem"
+        v-show="discIndex==index"
+        :discList="item"
+      ></discList>
       <keep-alive>
         <recommend-list v-if="discIndex===10"></recommend-list>
       </keep-alive>
@@ -57,8 +34,8 @@ import discList from "base/discList/discList";
 import { mapMutations } from "vuex";
 import mHeader from "base/mHeader/mHeader";
 import { shuffle } from "common/js/tools";
-import allList from "./allList.js"
-import recommendList from "components/recommendList/recommendList"
+import allList from "./allList.js";
+import recommendList from "components/recommendList/recommendList";
 export default {
   data() {
     return {
@@ -83,8 +60,8 @@ export default {
     recommendList
   },
   methods: {
-    selectRecommend(){
-      this.discIndex = 10
+    selectRecommend() {
+      this.discIndex = 10;
     },
     selectDiscItem(item) {
       this.$router.push({
@@ -98,18 +75,17 @@ export default {
     selectDisc(index) {
       this.discIndex = index;
       if (!discList[index]) {
-        getDiscList(this.recommendList[index]["item_id"]).then(data => {
+        getDiscList(this._allList[index]["item_id"]).then(data => {
           this.discList[index] = data;
-          // console.log(this.discList)
         });
       }
     },
     ...mapMutations(["SET_SINGER"])
   },
   created() {
-    this.recommendList = shuffle(allList.splice(0,10))
-  this.selectDisc(0);
-  },
+    this._allList = shuffle(allList.splice(0, 10));
+    this.selectDisc(0);
+  }
 };
 </script>
 
@@ -140,11 +116,10 @@ export default {
       border-radius: 16px;
       user-select: none;
       font-size: 14px;
-
     }
     .active {
       background-color: @color-theme2;
-      color:#fff;
+      color: #fff;
     }
     .item:not(.active):hover {
       color: @color-theme;
@@ -159,7 +134,7 @@ export default {
     margin: 0 auto;
   }
 }
-.recommend{
+.recommend {
   margin: 0;
 }
 </style>

@@ -420,7 +420,7 @@ export default {
   header {
     width: 100%;
     height: 30px;
-    background-color:  @color-theme2;
+    background-color: @color-theme2;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     & > div {

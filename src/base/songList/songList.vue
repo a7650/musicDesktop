@@ -55,9 +55,9 @@ export default {
     ...mapGetters(["currentSong"])
   },
   methods: {
-    selectSong(index, src,e) {
+    selectSong(index, src, e) {
       if (!src) return;
-      this.$emit("selectSong", index,e);
+      this.$emit("selectSong", index, e);
     }
   }
 };

@@ -10,7 +10,13 @@
       <div class="my-collection">
         <mHeader>收藏的歌单</mHeader>
         <div class="tip" v-if="!collectAlbum.length">你没有收藏歌单，去收藏一个吧💽</div>
-        <discList @selectDiscItem="selectDiscItem" class="list disc-list" :discList="collectAlbum" :noLoading="1" v-else></discList>
+        <discList
+          @selectDiscItem="selectDiscItem"
+          class="list disc-list"
+          :discList="collectAlbum"
+          :noLoading="1"
+          v-else
+        ></discList>
       </div>
     </div>
   </div>
@@ -22,7 +28,7 @@ import { getSongVkey } from "common/js/song";
 import songList from "base/songList/songList";
 import mHeader from "base/mHeader/mHeader";
 import discList from "base/discList/discList";
-import { mapGetters, mapActions,mapMutations } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -38,9 +44,9 @@ export default {
     ...mapGetters(["collectAlbum"])
   },
   methods: {
-      selectDiscItem(item){
+    selectDiscItem(item) {
       this.$router.push({
-       name:'discDetail_mine',
+        name: "discDetail_mine",
         params: {
           id: item.disstid
         }
@@ -115,10 +121,10 @@ export default {
   margin-top: 0;
   overflow-y: scroll;
 }
-.disc-list{
-    box-sizing: border-box;
-    // padding-left: 30px;
-    width: 700px;
+.disc-list {
+  box-sizing: border-box;
+  // padding-left: 30px;
+  width: 700px;
 }
 .line {
   box-sizing: border-box;

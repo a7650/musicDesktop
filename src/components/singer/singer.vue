@@ -24,14 +24,14 @@
 <script>
 import { getSingerList } from "api/singer";
 import { mapMutations } from "vuex";
-import mHeader from "base/mHeader/mHeader"
+import mHeader from "base/mHeader/mHeader";
 export default {
   data() {
     return {
       singerList: []
     };
   },
-  components:{
+  components: {
     mHeader
   },
   methods: {

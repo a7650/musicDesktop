@@ -5,29 +5,33 @@
     <button class="top" @click="top">
       <i class="icon-up"></i>
     </button>
-    <keep-alive exclude="discDetail,singerDetail,search"><router-view></router-view></keep-alive>
+    <keep-alive exclude="discDetail,singerDetail,search">
+      <router-view></router-view>
+    </keep-alive>
     <float ref="float"></float>
   </div>
 </template>
 
 <script>
-import tab from "base/tab/tab"
-import player from "components/player/player"
-import float from "base/float/float"
+import tab from "base/tab/tab";
+import player from "components/player/player";
+import float from "base/float/float";
 export default {
   components: {
-    tab,player,float
+    tab,
+    player,
+    float
   },
-  methods:{
-    top(){
+  methods: {
+    top() {
       document.getElementById("tab").scrollIntoView();
-    },
-  },
-  mounted(){
-    var self = this
-    this.__proto__.float=function(mes){
-      self.$refs.float.float(mes)
     }
+  },
+  mounted() {
+    var self = this;
+    this.__proto__.float = function(mes) {
+      self.$refs.float.float(mes);
+    };
   }
 };
 </script>
@@ -41,7 +45,7 @@ export default {
 //   bottom: 0;
 //   overflow-y: scroll;
 // }
-.top{
+.top {
   width: 30px;
   height: 30px;
   border: 1px solid #999;
@@ -55,7 +59,7 @@ export default {
   bottom: 70px;
   right: 3px;
 }
-.top:hover{
+.top:hover {
   background-color: #888;
   cursor: pointer;
 }

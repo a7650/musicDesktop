@@ -49,7 +49,7 @@ import { getHotKey } from "api/search";
 import { formateHot } from "common/js/tools";
 import { mapMutations, mapGetters } from "vuex";
 import login from "components/login/login";
-
+import { sessionLogin } from "api/login";
 
 export default {
   data() {
@@ -71,8 +71,15 @@ export default {
     ...mapGetters(["userStatus"])
   },
   methods: {
-    f(){
-      this.float("hello")
+    _sessionLogin() {
+      sessionLogin().then(data => {
+        if (data.type) {
+          this.SET_USERSTATUS(data.name);
+        }
+      });
+    },
+    f() {
+      this.float("hello");
     },
     blur() {
       setTimeout(() => {
@@ -86,17 +93,18 @@ export default {
     },
     select(str) {
       this.SET_SEARCHTEXT(str);
-      this.bgX =400;
+      this.bgX = 400;
       this.boxShow = false;
       this.searchText = "";
       this.$router.push({
         name: "search"
       });
     },
-    ...mapMutations(["SET_SEARCHTEXT"])
+    ...mapMutations(["SET_SEARCHTEXT", "SET_USERSTATUS"])
   },
   created() {
     this._getHotKey();
+    this._sessionLogin()
     let href = window.location.href,
       n =
         href.indexOf("/home") > -1
@@ -110,7 +118,7 @@ export default {
           : href.indexOf("/search") > -1
           ? 4
           : 0;
-      this.bgX = n*100
+    this.bgX = n * 100;
   }
 };
 </script>

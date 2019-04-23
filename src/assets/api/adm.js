@@ -1,4 +1,4 @@
-import crypto from "crypto";
+
 import axios from "axios"
 import {PRODUCTION } from './config'
 
@@ -14,6 +14,14 @@ export function addSingle(song) {
 
 export function addAll(list) {
     return axios.post(addUrl,list)
+    .then(data=>{
+        return Promise.resolve(data.data)
+    })
+}
+
+export function getUserList(params) {
+    const url = 'http://localhost:8002/api/getUserList'
+    return axios.get(url)
     .then(data=>{
         return Promise.resolve(data.data)
     })
