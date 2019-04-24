@@ -45,7 +45,7 @@ export default {
       } else {
         this.ADD_FAVORITE(song);
       }
-      this.REFRESH_MYALBUM();
+      // this.REFRESH_MYALBUM();
     },
     _selectSong(song, index) {
       if (!song.src) {

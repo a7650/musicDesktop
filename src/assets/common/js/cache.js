@@ -1,4 +1,5 @@
 import storage from 'good-storage'
+import { Object } from 'core-js';
 
 const SEARCH_KEY = "_SEARCH_HISTORY_"
 const MAX_HISTORYNUM = 20
@@ -84,10 +85,9 @@ export function setCreateAlbum(name, song) {
     }
     else {
         try {
-            song.src = ""
-            song.rank = ""
-            album.songList.unshift(song);
-            album.pic = song.image;
+            let _song = Object.assign({},song,{src:"",rank:""})
+            album.songList.unshift(_song);
+            album.pic = _song.image;
             let oldCreateAlbum = getCreateAlbum();
             let newCreateAlbum = resetArray(oldCreateAlbum, album, item => item.name === name, 999, 1);
             storage.set(CREATEALBUM_KEY, newCreateAlbum);
