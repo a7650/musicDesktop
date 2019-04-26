@@ -7,7 +7,8 @@
         <router-link @click.native="bgX=0" tag="div" to="/home" replace class="item">推荐</router-link>
         <router-link @click.native="bgX=100" tag="div" to="/singer" replace class="item">歌手</router-link>
         <router-link @click.native="bgX=200" tag="div" to="/rank" replace class="item">排行榜</router-link>
-        <router-link @click.native="bgX=300" tag="div" to="/mine" replace class="item">我的</router-link>
+        <router-link @click.native="bgX=300" tag="div" to="/collectRank" replace class="item">收藏榜</router-link>
+        <router-link @click.native="bgX=400" tag="div" to="/mine" replace class="item">我的</router-link>
       </div>
       <div class="search">
         <input type="text" placeholder="搜索" @focus="boxShow=true" @blur="blur" v-model="searchText">
@@ -104,7 +105,7 @@ export default {
   },
   created() {
     this._getHotKey();
-    this._sessionLogin()
+    this._sessionLogin();
     let href = window.location.href,
       n =
         href.indexOf("/home") > -1
@@ -113,10 +114,12 @@ export default {
           ? 1
           : href.indexOf("/rank") > -1
           ? 2
-          : href.indexOf("/mine") > -1
+          : href.indexOf("/collectRank") > -1
           ? 3
-          : href.indexOf("/search") > -1
+          : href.indexOf("/mine") > -1
           ? 4
+          : href.indexOf("/search") > -1
+          ? 5
           : 0;
     this.bgX = n * 100;
   }
@@ -134,7 +137,7 @@ export default {
   height: 70px;
   width: 100%;
   // border-bottom: 1px solid @color-line;
-  z-index: 999;
+  z-index: 99;
   min-width: 1200px;
   transition: 0.5s;
   .filter {
@@ -161,7 +164,7 @@ export default {
     font-size: @font-size-large-xx;
   }
   .items {
-    width: 400px;
+    width: 500px;
     height: 100%;
     position: relative;
     overflow: hidden;

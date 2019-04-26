@@ -1,5 +1,6 @@
 import storage from 'good-storage'
 import { Object } from 'core-js';
+import {albumRank} from 'api/serverRank'
 
 const SEARCH_KEY = "_SEARCH_HISTORY_"
 const MAX_HISTORYNUM = 20
@@ -191,6 +192,7 @@ export function setCollectAlbum(album) {
         try {
             allalbum.unshift(album)
             storage.set(COLLECTALBUM_KEY, allalbum);
+            albumRank(album)
             return { type: 1, mes: "收藏成功" }
         } catch (e) {
             return { type: 0, mes: "收藏失败" }

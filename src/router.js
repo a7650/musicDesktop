@@ -41,6 +41,10 @@ export default new Router({
       ]
     },
     {
+      path: '/collectRank',
+      component: () => import('components/collectRank/collectRank')
+    },
+    {
       path: '/mine',
       component: () => import('components/mine/mine')
     },

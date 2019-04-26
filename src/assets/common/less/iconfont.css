@@ -42,7 +42,7 @@ text-transform: none;
 
 .icon-up:before { content: "\e65d"; }
 
-.icon-under:before { content: "\e65e"; }
+.icon-down:before { content: "\e65e"; }
 
 .icon-right:before { content: "\e65f"; }
 

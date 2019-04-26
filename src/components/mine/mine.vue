@@ -24,7 +24,7 @@
 
 <script>
 import { getCreateAlbum } from "common/js/cache";
-import { getSongVkey } from "common/js/song";
+import {getSongVkey} from "api/song";
 import songList from "base/songList/songList";
 import mHeader from "base/mHeader/mHeader";
 import discList from "base/discList/discList";

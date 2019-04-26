@@ -11,7 +11,7 @@ import songList from "base/songList/songList";
 import { getRecommend } from "api/recommend";
 import loading from "base/loading/loading";
 import { mapActions } from "vuex";
-import { getSongVkey } from "common/js/song";
+import {getSongVkey} from "api/song";
 export default {
   data() {
     return {

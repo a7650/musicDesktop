@@ -1,6 +1,7 @@
 import * as types from './mutation-types'
 import {getFavoriteMid,addFavorite,deleteFavorite} from 'common/js/favorite'
 import {saveSearchHistory,clearSearchHistory,getMyAlbum,getCollectAlbum,getCreateAlbum} from 'common/js/cache'
+import {songRank} from 'api/serverRank'
 
 
 const mutations = {
@@ -25,6 +26,7 @@ const mutations = {
     [types.ADD_FAVORITE](state,song){
         addFavorite(song);
         state.favoriteMid =  getFavoriteMid();
+        songRank(song)
     },
 
     [types.DELETE_FAVORITE](state,song){

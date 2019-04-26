@@ -22,7 +22,8 @@
 
 <script>
 import mHeader from "base/mHeader/mHeader";
-import { createSong, getSongVkey } from "common/js/song";
+import { createSong} from "common/js/song";
+import {getSongVkey} from "api/song";
 import { formateHot, un_insertionSort2 } from "common/js/tools";
 import { getSongList, getComment } from "api/rank";
 import { mapGetters, mapActions } from "vuex";

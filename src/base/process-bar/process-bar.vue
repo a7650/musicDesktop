@@ -132,7 +132,7 @@ export default {
   .process {
     flex: 1;
     height: 10px;
-    background: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.1);
     position: relative;
     margin: 0 10px;
     border-radius: 5px;

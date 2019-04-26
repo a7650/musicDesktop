@@ -81,8 +81,8 @@ export default {
         nickname:this.nickname,
         dissname: this.dissname,
         disstid: this.disstid,
-        desc:this.desc,
-        collectAlbum: true
+        desc:this.desc
+        // collectAlbum: true
       });
       if (m.type === 1) {
         this.isCollect = true;
@@ -125,6 +125,7 @@ export default {
         // console.log(this.songList);
         // console.log(data)
       });
+
     },
     ...mapMutations(["REFRESH_COLLECTALBUM"]),
     ...mapActions(["selectSong"])

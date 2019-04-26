@@ -1,16 +1,11 @@
 const express = require('express')
-const MDB = require('mongodb').MongoClient
-const bodyParser = require('body-parser')
-const crypto = require("crypto")
-const cookieParser = require('cookie-parser')
-const session = require('express-session')
-const MongoStore = require('connect-mongo')(session)
 const app = express()
+const crypto = require("crypto")
+const MDB = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017'
-const sessionUrl = 'mongodb://localhost:27017/session'
+const axios = require("axios")
 const apiRoutes = express.Router()
-const sessionSecret = Math.random().toString(36).substring(2)
-// const axios = require("axios")
+
 function getHash(val) {
     let hash = crypto.createHash("sha256");
     hash.update(val);
@@ -49,23 +44,6 @@ const DB = {
     }
 }
 
-app.use(cookieParser())
-    .use(session({
-        secret: sessionSecret,
-        resave: true,
-        saveUninitialized: false,
-        store: new MongoStore({
-            url: sessionUrl,
-            ttl: 14 * 24 * 60 * 60 // = 14 days. Default
-        }),
-        cookie: { httpOnly: true, maxAge: 600000 }
-    }))
-    .use(bodyParser.json())
-    .use(function (req, res, next) {
-        req.session._garbage = Date();
-        req.session.touch();
-        next();
-    })
 
 apiRoutes.get('/sessionLogin', function (req, res) {
     let sess = req.session
@@ -127,8 +105,8 @@ apiRoutes.post('/register', function (req, res) {
             allusers.updateOne({ f: 0 }, {
                 $set: userData
             })
-            allusers.updateOne({flag:1},{
-                $addToSet:{nameList:reqData.name}
+            allusers.updateOne({ flag: 1 }, {
+                $addToSet: { nameList: reqData.name }
             })
             res.json({ type: 1, mes: "注册成功" })
         })
@@ -153,32 +131,105 @@ apiRoutes.get('/getRecommend', function (req, res) {
     })
 })
 
-apiRoutes.get('/getUserList',function(req,res){
+apiRoutes.get('/getUserList', function (req, res) {
     DB.get('allusers', allusers => {
         allusers.find({ flag: 1 }).toArray((err, _res) => {
             res.json({ nameList: _res[0].nameList })
         })
     })
 })
-// apiRoutes.get('/search', function (req, res) {
-//     const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
-//     axios.get(url, {
-//       headers: {
-//         origin: 'https://y.qq.com',
-//         referer: 'https://y.qq.com/m/index.html',
-//       },
-//       params: req.query
-//     }).then(response => {
-//       res.json(response.data)
-//     }).catch(e => {
-//       console.log(e)
-//     })
-//   })
 
-app.use('/api', apiRoutes)
-
-app.listen(8002, function () {
-    console.log('服务器已启动', 'music2 8002')
+apiRoutes.post('/songRank',function(req,res){
+    let reqData = req.body;
+    DB.get('rank', rank => {
+        rank.find({flag:1}).toArray((err,_res)=>{
+            let songList = _res[0].songList;
+           let n = songList.findIndex(item=>item.id===reqData.id);
+           if(n>-1){
+               rank.updateOne({ flag: 1 ,"songList.id":reqData.id}, {
+                   $inc: { "songList.$.num":1 }
+               })
+           }else{
+               reqData.num = 1;
+                rank.updateOne({ flag: 1 }, {
+                   $addToSet: { songList: reqData }
+               })
+           }
+        })
+    })
 })
 
-app.use(express.static('./dist'))
+apiRoutes.post('/albumRank',function(req,res){
+    let reqData = req.body;
+    DB.get('rank', rank => {
+        rank.find({flag:2}).toArray((err,_res)=>{
+            let albumList = _res[0].albumList;
+           let n = albumList.findIndex(item=>item.disstid===reqData.disstid);
+           if(n>-1){
+               rank.updateOne({ flag: 2 ,"albumList.disstid":reqData.disstid}, {
+                   $inc: { "albumList.$.num":1 }
+               })
+           }else{
+               reqData.num = 1;
+                rank.updateOne({ flag: 2 }, {
+                   $addToSet: { albumList: reqData }
+               })
+           }
+        })
+    })
+})
+
+apiRoutes.get('/getSongRank', function (req, res) {
+    DB.get('rank', rank => {
+        rank.find({ flag: 1 }).toArray((err, _res) => {
+            res.json({ songList: _res[0].songList })
+        })
+    })
+})
+
+apiRoutes.get('/getAlbumRank', function (req, res) {
+    DB.get('rank', rank => {
+        rank.find({ flag: 2 }).toArray((err, _res) => {
+            res.json({ albumList: _res[0].albumList })
+        })
+    })
+})
+
+apiRoutes.get('/search', function (req, res) {
+    const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
+    axios.get(url, {
+      headers: {
+        origin: 'https://y.qq.com',
+        referer: 'https://y.qq.com/m/index.html',
+      },
+      params: req.query
+    }).then(response => {
+      res.json(response.data)
+    }).catch(e => {
+      console.log(e)
+    })
+  })
+
+  apiRoutes.get('/getLyric', function (req, res) {
+    const url = 'https://szc.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg';
+    axios.get(url, {
+      headers: {
+        referer: 'https://y.qq.com/portal/player.html'
+      },
+      params: req.query
+    }).then(response => {
+      let data = response.data
+      if (typeof data === 'string') {
+        const reg = /^\w+\(({.+})\)$/
+        const matches = data.match(reg)
+        if (matches) {
+          data = JSON.parse(matches[1])
+        }
+      }
+      res.json(data)
+    }).catch(e => {
+      console.log(e)
+    })
+  })
+
+module.exports = apiRoutes

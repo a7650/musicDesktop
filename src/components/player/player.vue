@@ -21,6 +21,7 @@
           <span v-if="playList.length" class="name" v-html="currentSong.name"></span>
           <span v-else class="name">当前未选择歌曲</span>
           <span class="singer">{{currentSong.singer}}</span>
+          <span class="lyric">{{curLyric_t}}</span>
         </div>
         <div class="process-bar">
           <process-bar
@@ -65,6 +66,9 @@
           </div>
         </div>
       </div>
+      <div class="full-screen">
+        <button @click="fullScreen">全屏模式</button>
+      </div>
     </div>
     <transition name="mini-list">
       <div class="mini-list" v-show="miniList">
@@ -77,6 +81,19 @@
         <miniList @selectSong="selectSong" @deleteSong="_deleteSong"></miniList>
       </div>
     </transition>
+    <fullScreenPlayer
+      v-show="full"
+      :Lyric="Lyric"
+      :curLyric_l="curLyric_l"
+      :currentTime="currentTime"
+      :modeIcon="modeIcon"
+      @prevSong="prevSong"
+      @togglePlaying="togglePlaying"
+      @nextSong="nextSong"
+      @toggleMode="toggleMode"
+      @turnProcess="turnProcess"
+      @closeFull="closeFull"
+    ></fullScreenPlayer>
     <audio
       id="audio"
       ref="audio"
@@ -93,7 +110,8 @@ import processBar from "base/process-bar/process-bar";
 import { shuffle } from "common/js/tools";
 import { playMode } from "common/config";
 import miniList from "base/miniList/miniList";
-import { constants } from "fs";
+import { lyricParser } from "common/js/song";
+import fullScreenPlayer from "components/fullScreenPlayer/fullScreenPlayer";
 // import {setPlayHistory} from "common/js/cache"
 export default {
   data() {
@@ -103,7 +121,11 @@ export default {
       ready: true,
       listShow: false,
       miniList: false,
-      warnShow: false
+      warnShow: false,
+      Lyric: null,
+      curLyric_t: "",
+      curLyric_l: 0,
+      full: false
     };
   },
   computed: {
@@ -126,9 +148,16 @@ export default {
   },
   components: {
     processBar,
-    miniList
+    miniList,
+    fullScreenPlayer
   },
   methods: {
+    closeFull(){
+      this.full = false;
+    },
+    fullScreen() {
+      this.full = true;
+    },
     downLoad() {
       if (!this.userStatus) {
         window.alert("登录之后可以下载，请先登录");
@@ -145,6 +174,8 @@ export default {
       this.SET_CURRENTINDEX(index);
     },
     toggleMode() {
+      console.log(2);
+
       if (!this.playList.length) return;
       let m = (this.playMode + 1) % 3;
       let newList = null;
@@ -164,8 +195,15 @@ export default {
       this.SET_CURRENTINDEX(i);
     },
     turnProcess(time) {
+      //  time(s)
       this.currentTime = time;
       this.audio.currentTime = time;
+      if (!this.playing) {
+        this.Lyric.seek(time * 1000);
+        this.SET_PLAYING(true);
+      } else {
+        this.Lyric.seek(time * 1000).play(time * 1000);
+      }
     },
     nextSong() {
       if (!this.ready) {
@@ -211,10 +249,33 @@ export default {
     audioReadyPlay() {
       this.readyPlay = true;
     },
+    getLyric() {
+      this.Lyric && clearTimeout(this.Lyric.timer) && (this.Lyric = null);
+      this.currentSong.getLyric().then(
+        data => {
+          this.Lyric = new lyricParser(data, this.lyricHandle);
+          if (this.Lyric.noLyric) {
+            this.Lyric = null;
+            this.curLyric_t = "暂无歌词";
+          }
+          this.SET_PLAYING(true);
+        },
+        err => {
+          this.curLyric_t = err;
+        }
+      );
+    },
+    lyricHandle(line, text) {
+      this.curLyric_l = line;
+      this.curLyric_t = text;
+    },
     initPlayer() {
       this.readyPlay = false;
       this.ready = false;
       this.currentTime = 0;
+      this.SET_PLAYING(false);
+      this.curLyric_t = "";
+      this.curLyric_l = "";
     },
     ...mapMutations([
       "SET_PLAYING",
@@ -240,9 +301,8 @@ export default {
         return;
       } //！！！全部不存在src的时候会死循环
       this.initPlayer();
+      this.getLyric();
       this.$refs.audio.src = newSong.src;
-      this.$refs.audio.play();
-      this.SET_PLAYING(true);
       //   setPlayHistory(this.currentSong);
       if (this.timer2) {
         clearTimeout(this.timer2);
@@ -256,8 +316,10 @@ export default {
       this.$nextTick(() => {
         if (this.playing) {
           this.audio.play();
+          this.Lyric && this.Lyric.play(this.currentTime * 1000);
         } else {
           this.audio.pause();
+          this.Lyric.pause();
         }
       });
     }
@@ -276,7 +338,7 @@ export default {
   right: 0;
   left: 10px;
   position: fixed;
-  z-index: 99;
+  z-index: 100;
   bottom: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
@@ -349,18 +411,23 @@ export default {
       span {
         line-height: 20px;
         height: 20px;
-        max-width: 200px;
         display: inline-block;
         .no-wrap;
+      }
+      .name {
+        max-width: 100px;
+        font-size: @font-size-medium;
+        margin-right: 20px;
       }
       .singer {
         flex: 1;
         color: @color-text-dd;
         font-size: @font-size-small-x;
-      }
-      .name {
-        font-size: @font-size-medium;
         margin-right: 20px;
+      }
+      .lyric {
+        max-width: 360px;
+        font-size: @font-size-medium;
       }
     }
     .process-bar {
@@ -500,6 +567,26 @@ export default {
     }
   }
 }
+
+.full-screen {
+  width: 80px;
+  height: 30px;
+  margin-left: 5px;
+  button {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    border: 1px solid @color-line;
+    color: #000;
+    transition: 0.2s;
+  }
+  button:hover {
+    background-color: @color-theme;
+    color: #fff;
+    cursor: pointer;
+  }
+}
+
 .mini-list-enter,
 .mini-list-leave-to {
   transform: translateY(100%);
