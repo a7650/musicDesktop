@@ -46,17 +46,24 @@
           <button class="play-mode" @click="toggleMode">
             <i :class="modeIcon"></i>
           </button>
-          <button class="list">
+          <button class="list" @click="listShow=!listShow">
             <div>
               <i class="icon-list"></i>
             </div>
             <div class="num">{{playList.length}}</div>
           </button>
           <button class="fav" @click="setFavorite(currentSong)">
-            <i :class="favoriteIcon"></i>
+            <i class="icon-favorite" v-show="favoriteIcon"></i>
+            <i class="icon-unfavorite" v-show="!favoriteIcon"></i>
           </button>
         </div>
       </div>
+      <transition name="play-list">
+        <div class="play-list" v-show="listShow">
+          <div class="title">播放列表({{playList.length}})</div>
+          <miniList @selectSong="selectSong" @deleteSong="deleteSong"></miniList>
+      </div>
+      </transition>
     </div>
   </transition>
 </template>
@@ -65,11 +72,16 @@
 import processBar from "base/process-bar/process-bar";
 import { mapGetters, mapMutations } from "vuex";
 import { isFavorite } from "common/js/favorite";
-
+import miniList from "base/miniList/miniList"
 export default {
   props: ["curLyric_l", "Lyric", "currentTime", "modeIcon"],
   data() {
-    return {};
+    return {
+      listShow:false
+    };
+  },
+  components:{
+    processBar,miniList
   },
   computed: {
     LyricList() {
@@ -78,15 +90,18 @@ export default {
     favoriteIcon() {
       let mid = this.favoriteMid;
       return isFavorite(this.currentSong.mid)
-        ? "icon-favorite"
-        : "icon-unfavorite";
+        // ? "icon-favorite"
+        // : "icon-unfavorite";
     },
     ...mapGetters(["currentSong", "playing", "playList", "favoriteMid"])
   },
-  components: {
-    processBar
-  },
   methods: {
+    deleteSong(){
+      this.$emit("deleteSong")
+    },
+    selectSong(index){
+      this.$emit("selectSong",index)
+    },
     prevSong() {
       this.$emit("prevSong");
     },
@@ -231,10 +246,13 @@ header {
     height: 50px;
     line-height: 50px;
     color: rgba(255, 255, 255, 0.4);
+    transition: .2s;
+    transform-origin: left center;
     .no-wrap;
   }
   .active {
-    color: @color-theme;
+    color: #fff;
+    transform: scale(1.2);
   }
 }
 .controls {
@@ -315,6 +333,36 @@ header {
       color: #ff0000;
     }
   }
+  .icon-favorite,.icon-unfavorite{
+    display: block;
+     animation: fav .4s;
+  }
+  .icon-unfavorite:hover{
+    color: #ff0000;
+  }
+}
+
+.play-list{
+  width: 400px;
+  // height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 50px;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, .6);
+  transition: .3s;
+  .title{
+    height: 30px;
+    text-align: center;
+    color: #fff;
+    line-height: 30px;
+  }
+
+}
+
+.play-list-enter,.play-list-leave-to{
+  transform: translateX(100%);
 }
 
 .player-enter,
@@ -325,15 +373,16 @@ header {
 // .fav-enter-to{
 //     opacity: 0;
 // }
-// @keyframes fav {
-//   0% {
-//     transform: scale(0);
-//   }
-//   50% {
-//     transform: scale(1.2);
-//   }
-//   100% {
-//     transform: scale(1);
-//   }
-// }
+@keyframes fav {
+  0% {
+    transform: scale(0);
+    // opacity: 0;
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 </style>

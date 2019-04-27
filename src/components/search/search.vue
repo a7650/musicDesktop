@@ -217,7 +217,6 @@ export default {
   height: 240px;
   position: relative;
   perspective: 1000px;
-  z-index: 99;
   background-color: @color-theme2;
   .input-content {
     position: absolute;

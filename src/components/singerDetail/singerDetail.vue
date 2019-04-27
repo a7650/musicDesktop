@@ -88,7 +88,7 @@ export default {
     selectPage(n) {
       this.currentPage = n;
     },
-    _selectSong(index, filterList) {
+    _selectSong(index) {
       this.selectSong({
         list: [...this.songList[this.currentPage]],
         index

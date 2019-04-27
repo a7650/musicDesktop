@@ -3,11 +3,14 @@
     <div class="_content">
       <mHeader>{{title}}</mHeader>
       <chart
-        @selectSong="_CselectSong"
+        @select="_CselectSong"
         :title="title"
         :xAxisData="xAxisData"
         :seriesData="seriesData"
         :yAxisName="yAxisName"
+        :formatter="formatter"
+        width="900px"
+        height="400px"
       ></chart>
       <songList
         :songList="songList"
@@ -37,7 +40,8 @@ export default {
       xAxisData: [],
       seriesData: [],
       yAxisName: "",
-      err_message: ""
+      err_message: "",
+      formatter:""
     };
   },
   computed: {
@@ -67,6 +71,13 @@ export default {
       });
     },
     _getSongList(id = this.singer.id || this.$route.params.id) {
+      if(id==4){
+        this.yAxisName = "流行指数/%";
+        this.formatter = "{b}:{c}%<br>点击即可播放该歌曲"
+      }else{
+        this.yAxisName = "上升指数/位";
+        this.formatter = "{b}:本周上升{c}位<br>点击即可播放该歌曲";
+      }
       getSongList(id).then(data => {
         if (data.songlist.length === 0) {
           this.err_message = "这个榜单暂时没有歌曲，去看看别的吧";
@@ -75,6 +86,7 @@ export default {
         this.title = data.topinfo.ListName;
         this.songList = this._encaseSongList(data.songlist, id);
       });
+
     },
     _encaseSongList(list, id) {
       let result = [],
@@ -87,13 +99,12 @@ export default {
           if (id == 4) {
             let _r = (parseFloat(item.in_count) * 100).toFixed(0);
             r = _r + "%";
-            this.yAxisName = "流行指数/%";
+            
             _seriesData.push(+_r);
             _xAxisData.push(item.data.songname);
           } else {
             let _r = parseInt(item.cur_count) - parseInt(item.old_count);
             r = _r === 0 ? "-" : _r < 0 ? "↑ " + -_r : "↓ " + _r;
-            this.yAxisName = "上升指数/位";
             _r < 0 &&
               _seriesData.push(-_r) &&
               _xAxisData.push(item.data.songname);

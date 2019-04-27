@@ -93,6 +93,8 @@
       @toggleMode="toggleMode"
       @turnProcess="turnProcess"
       @closeFull="closeFull"
+      @selectSong="selectSong"
+      @deleteSong="_deleteSong"
     ></fullScreenPlayer>
     <audio
       id="audio"
@@ -152,7 +154,7 @@ export default {
     fullScreenPlayer
   },
   methods: {
-    closeFull(){
+    closeFull() {
       this.full = false;
     },
     fullScreen() {
@@ -170,12 +172,10 @@ export default {
     _deleteSong(index) {
       this.deleteSong(index);
     },
-    selectSong(song, index) {
+    selectSong(index) {
       this.SET_CURRENTINDEX(index);
     },
     toggleMode() {
-      console.log(2);
-
       if (!this.playList.length) return;
       let m = (this.playMode + 1) % 3;
       let newList = null;
@@ -199,10 +199,10 @@ export default {
       this.currentTime = time;
       this.audio.currentTime = time;
       if (!this.playing) {
-        this.Lyric.seek(time * 1000);
+        this.Lyric&&this.Lyric.seek(time * 1000);
         this.SET_PLAYING(true);
       } else {
-        this.Lyric.seek(time * 1000).play(time * 1000);
+        this.Lyric&&this.Lyric.seek(time * 1000).play(time * 1000);
       }
     },
     nextSong() {
@@ -222,8 +222,12 @@ export default {
         return;
       }
       if (this.currentIndex > 0) {
-        this.SET_CURRENTINDEX(this.currentIndex - 1);
-        return;
+        for (var i = this.currentIndex - 1; i > -1; i--) {
+          if (this.playList[i].src) {
+            this.SET_CURRENTINDEX(i);
+            break;
+          }
+        }
       }
       //   if (this.currentIndex||this.playList.length === 1) {
       //     this.loopSong();
@@ -234,6 +238,8 @@ export default {
     },
     loopSong() {
       this.currentTime = this.$refs.audio.currentTime = 0;
+      this.curLyric_l = 0;
+      this.Lyric.seek().play()
       this.$refs.audio.play();
     },
     toggleSong() {
@@ -275,7 +281,7 @@ export default {
       this.currentTime = 0;
       this.SET_PLAYING(false);
       this.curLyric_t = "";
-      this.curLyric_l = "";
+      this.curLyric_l = 0;
     },
     ...mapMutations([
       "SET_PLAYING",
@@ -319,7 +325,7 @@ export default {
           this.Lyric && this.Lyric.play(this.currentTime * 1000);
         } else {
           this.audio.pause();
-          this.Lyric.pause();
+          this.Lyric && this.Lyric.pause();
         }
       });
     }
@@ -338,6 +344,7 @@ export default {
   right: 0;
   left: 10px;
   position: fixed;
+  min-width: 1200px;
   z-index: 100;
   bottom: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
@@ -515,6 +522,7 @@ export default {
     background-color: #fff;
     border: 1px solid @color-line;
     color: #000;
+    .no-wrap;
   }
   button:hover {
     background-color: @color-line;
@@ -579,6 +587,7 @@ export default {
     border: 1px solid @color-line;
     color: #000;
     transition: 0.2s;
+    .no-wrap;
   }
   button:hover {
     background-color: @color-theme;

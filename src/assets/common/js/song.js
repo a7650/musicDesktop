@@ -3,7 +3,7 @@ import { Base64 } from 'js-base64'
 import { getSongVkey } from 'api/song'
 
 //song类
-class song {
+export class song {
     constructor({ id, mid, singer, name, album, duration, image, src, rank }) {
         this.id = id
         this.mid = mid
@@ -96,7 +96,7 @@ export function lyricParser(lyricStr, fn) {
     // this.album = this.lyricStr.match(/\[al:(.+?)\]/)[1];
     this.noLyric = false;
     this.textContent = this.parser(lyricStr);
-    // this.lyricDuration = this.textContent[this.textContent.length - 1].time;
+    this.lyricDuration = this.textContent.length>0?this.textContent[this.textContent.length - 1].time:0;
 }
 
 lyricParser.prototype.parser = function (lyric) {
@@ -145,21 +145,29 @@ lyricParser.prototype.pause = function () {
 
 lyricParser.prototype.seek = function (seekTime = 0) {
     let self = this;
-    self.curTime = seekTime;
     self.timer && clearTimeout(self.timer);
     self.timer = null;
-    self.textContent.reduce(function (pre, cur, i, arr) {
-        try {
-            if (seekTime >= pre.time && seekTime < cur.time) {
-                self.line = i - 1;
-                self.fn(arr[i - 1].line, arr[i - 1].text)
-                throw new Error('break')
-            } else {
-                return cur
+    if(seekTime===0){
+        this.line = -1;
+    }else if(seekTime>=this.lyricDuration){
+        let len = this.textContent.length-1;
+        this.line = len;
+        this.fn(this.textContent[len].line,this.textContent[len].text);
+    }else{
+        self.curTime = seekTime;
+        self.textContent.reduce(function (pre, cur, i, arr) {
+            try {
+                if (seekTime >= pre.time && seekTime < cur.time) {
+                    self.line = i - 1;
+                    self.fn(arr[i - 1].line, arr[i - 1].text)
+                    throw new Error('break')
+                } else {
+                    return cur
+                }
+            } catch (e) {
+                return
             }
-        } catch (e) {
-            return
-        }
-    })
+        })
+    }
     return this
 }

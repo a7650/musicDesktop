@@ -47,11 +47,11 @@ export default {
       }
       // this.REFRESH_MYALBUM();
     },
-    _selectSong(song, index) {
+    _selectSong(song,index) {
       if (!song.src) {
         return;
       }
-      this.$emit("selectSong", song, index);
+      this.$emit("selectSong",index);
     },
     deleteSong(index) {
       this.$emit("deleteSong", index);

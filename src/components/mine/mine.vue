@@ -24,7 +24,8 @@
 
 <script>
 import { getCreateAlbum } from "common/js/cache";
-import {getSongVkey} from "api/song";
+import { getSongVkey } from "api/song";
+import { song } from "common/js/song";
 import songList from "base/songList/songList";
 import mHeader from "base/mHeader/mHeader";
 import discList from "base/discList/discList";
@@ -62,18 +63,23 @@ export default {
   },
   activated() {
     let list = getCreateAlbum("我的收藏").songList;
-    list.forEach(item => {
+    let result = [];
+    list.forEach((item,i) => {
+      result.push(new song(item));
+      let item2 = result[i]//加了这一行songList就会更新
       getSongVkey(item.mid).then(res => {
         let vkey = res.data.items[0].vkey;
-        item.src = vkey
+        item2.src = vkey
           ? `http://dl.stream.qqmusic.qq.com/C400${
               item.mid
             }.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`
           : "";
-        item.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`;
+        item2.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`;
+        console.log(list[i]==item)//此时获得了src但是却不会将songList里的src更新。
       });
     });
-    this.songList = list;
+    this.songList = result;
+    console.log(this.songList)//此时没有src
     // console.log(this.songList)
   }
 };

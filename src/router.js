@@ -45,6 +45,11 @@ export default new Router({
       component: () => import('components/collectRank/collectRank')
     },
     {
+      name: 'discDetail_rank',
+      path: '/collectRank/:id',
+      component: () => import('components/discDetail/discDetail')
+    },
+    {
       path: '/mine',
       component: () => import('components/mine/mine')
     },

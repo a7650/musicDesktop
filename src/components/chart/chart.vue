@@ -1,11 +1,10 @@
 <template>
-  <div id="main" style="width: 900px;height:400px;"></div>
+  <div ref="chart" :style="{'width':width,'height':height}"></div>
 </template>
 
 <script>
 // import echarts from "echarts"
-const formatter1 = "{b}:{c}%<br>点击即可播放该歌曲";
-const formatter2 = "{b}:本周上升{c}位<br>点击即可播放该歌曲";
+
 const option = {
   title: {
     text: ""
@@ -67,28 +66,25 @@ const option = {
 };
 
 export default {
-  props: ["title", "xAxisData", "seriesData", "yAxisName"],
+  props: ["title", "xAxisData", "seriesData", "yAxisName","formatter","width","height"],
   data() {
     return {};
   },
   mounted() {
     let self = this;
-    this.Chart = echarts.init(document.getElementById("main"));
+    this.Chart = echarts.init(this.$refs.chart);
     this.Chart.on("click", function(params) {
-      self.$emit("selectSong", params.name);
+      self.$emit("select", params.name);
     });
   },
   watch: {
-    title() {
+    title(n,o) {
+      if(!n){return};
       option.title.text = this.title;
       option.xAxis.data = this.xAxisData;
       option.yAxis.name = this.yAxisName;
       option.series[0].data = this.seriesData;
-      if (this.$route.params.id == 4) {
-        option.tooltip.formatter = formatter1;
-      } else {
-        option.tooltip.formatter = formatter2;
-      }
+      option.tooltip.formatter = this.formatter;
       this.Chart.setOption(option);
     }
   }

@@ -94,7 +94,7 @@ export default {
     },
     select(str) {
       this.SET_SEARCHTEXT(str);
-      this.bgX = 400;
+      this.bgX = 500;
       this.boxShow = false;
       this.searchText = "";
       this.$router.push({
