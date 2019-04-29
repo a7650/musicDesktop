@@ -1,5 +1,5 @@
-const crypto = require("crypto")
 const MDB = require('mongodb').MongoClient
+const crypto = require("crypto")
 const url = 'mongodb://localhost:27017'
 
 const sortInterval = 1000*60*60   //每小时排序
@@ -42,28 +42,28 @@ const DB = {
     }
 }
 
-// let rankSortTimer = setInterval(() => {
-//     DB.get('rank', rank => {
-//         rank.find({ flag: 2}).toArray((err, _res) => {
-//             let albumList = _res[0].albumList;
-//             albumList.sort((a,b)=>{
-//                 return b.num-a.num
-//             })
-//             rank.updateOne({flag:4},{
-//                 $set:{albumList:albumList.splice(0,100)}
-//             })
-//         })
-//         rank.find({ flag: 1}).toArray((err, _res) => {
-//             let songList = _res[0].songList;
-//             songList.sort((a,b)=>{
-//                 return b.num-a.num
-//             })
-//             rank.updateOne({flag:3},{
-//                 $set:{songList:songList.splice(0,100)}
-//             })
-//         })
-//     })
-// }, 10000);
+let rankSortTimer = setInterval(() => {
+    DB.get('rank', rank => {
+        rank.find({ flag: 2}).toArray((err, _res) => {
+            let albumList = _res[0].albumList;
+            albumList.sort((a,b)=>{
+                return b.num-a.num
+            })
+            rank.updateOne({flag:4},{
+                $set:{albumList:albumList.splice(0,100)}
+            })
+        })
+        rank.find({ flag: 1}).toArray((err, _res) => {
+            let songList = _res[0].songList;
+            songList.sort((a,b)=>{
+                return b.num-a.num
+            })
+            rank.updateOne({flag:3},{
+                $set:{songList:songList.splice(0,100)}
+            })
+        })
+    })
+}, sortInterval);
 
 module.exports = {
     sessionLogin(req, res) {

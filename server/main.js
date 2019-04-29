@@ -1,3 +1,4 @@
+const apiRoutes = require('./apiRoutes')
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
@@ -7,14 +8,13 @@ const app = express()
 const sessionUrl = 'mongodb://localhost:27017/session'
 const sessionSecret = Math.random().toString(36).substring(2)
 
-const apiRoutes = require('./apiRoutes')
 
-app.all('*', function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
-    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-    next();
-});
+// app.all('*', function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+//     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+//     next();
+// });
 
 app.use(cookieParser())
     .use(session({
@@ -30,7 +30,6 @@ app.use(cookieParser())
     .use(bodyParser.json())
     .use(function (req, res, next) {
         req.session._garbage = Date();
-        req.session.touch();
         next();
     })
 

@@ -1,5 +1,12 @@
 <template>
   <div class="mine">
+    <button class="report" @click="reportDetail=true">查看我的听歌报告</button>
+   <transition name="report-detail">
+      <div class="report-detail" v-show="reportDetail">
+      <h3>听歌报告</h3>
+      <div class="report-content"></div>
+    </div>
+   </transition>
     <div class="content">
       <div class="my-album">
         <mHeader>收藏的歌曲</mHeader>
@@ -33,7 +40,8 @@ import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      songList: []
+      songList: [],
+      reportDetail:false
     };
   },
   components: {
@@ -42,7 +50,7 @@ export default {
     discList
   },
   computed: {
-    ...mapGetters(["collectAlbum"])
+    ...mapGetters(["collectAlbum","userStatus"])
   },
   methods: {
     selectDiscItem(item) {
@@ -66,7 +74,7 @@ export default {
     let result = [];
     list.forEach((item,i) => {
       result.push(new song(item));
-      let item2 = result[i]//加了这一行songList就会更新
+      let item2 = result[i]
       getSongVkey(item.mid).then(res => {
         let vkey = res.data.items[0].vkey;
         item2.src = vkey
@@ -75,12 +83,9 @@ export default {
             }.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`
           : "";
         item2.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`;
-        console.log(list[i]==item)//此时获得了src但是却不会将songList里的src更新。
       });
     });
     this.songList = result;
-    console.log(this.songList)//此时没有src
-    // console.log(this.songList)
   }
 };
 </script>
@@ -90,13 +95,14 @@ export default {
 @import "~common/less/mixin.less";
 .mine {
   position: absolute;
-  padding-top: 80px;
+  padding-top: 70px;
   width: 100%;
   color: #000;
   height: 100%;
   box-sizing: border-box;
   // min-width: 1200px;
   padding-bottom: 70px;
+  overflow: hidden;
 }
 .content {
   display: flex;
@@ -138,5 +144,47 @@ export default {
   width: 1px;
   background-color: @color-line;
   margin: 130px 0;
+}
+.report{
+  padding: 5px 10px;
+  background-color: @color-theme;
+  color: #fff;
+  border: none;
+  margin-left: 10px;
+  border-radius: 5px;
+  transition: .2s;
+  position: absolute;
+  margin-top: 5px;
+}
+.report:hover{
+  box-shadow: 0 0 10px @color-theme;
+  cursor: pointer;
+}
+.report-detail{
+  position: absolute;
+  width: 800px;
+  background-color: #fff;
+  box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  z-index: 99;
+  top: 70px;
+  bottom: 50px;
+  transition: .4s;
+  h3{
+    width: 100%;
+    text-align: center;
+    height: 20px;
+    padding: 5px 0;
+    position: absolute;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .report-content{
+    width: 100%;
+    height: 100%;
+    padding-top: 30px;
+  }
+}
+.report-detail-enter,.report-detail-leave-to{
+  transform: translateX(-100%);
 }
 </style>

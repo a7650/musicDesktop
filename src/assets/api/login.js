@@ -28,7 +28,8 @@ export function register({name,password}){
 }
 
 export function sessionLogin(){
-    const url = 'http://localhost:8002/api/sessionLogin'
+    const url = PRODUCTION ? 'http://106.12.198.147/music2/api/sessionLogin' : 'http://localhost:8002/api/sessionLogin';
+    // const url = 'http://localhost:8002/api/sessionLogin';
     return axios.get(url)
     .then(data=>{
         return Promise.resolve(data.data)

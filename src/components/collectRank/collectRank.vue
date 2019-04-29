@@ -7,11 +7,11 @@
         <img @click="refresh('song')" src="./refresh.png" title="点击刷新">
       </div>
       <chart
-        v-show="songRank.length>0"
         @select="_CselectSong"
         :title="title1"
         :xAxisData="xAxisData1"
         :seriesData="seriesData1"
+        :chartLoading="chartLoading1"
         yAxisName="收藏次数"
         formatter="《{b}》:收藏次数:{c}<br>点击即可播放该歌曲"
         width="600px"
@@ -27,11 +27,11 @@
         <img @click="refresh('album')" src="./refresh.png" title="点击刷新">
       </div>
       <chart
-        v-show="albumRank.length>0"
         @select="_CselectAlbum"
         :title="title2"
         :xAxisData="xAxisData2"
         :seriesData="seriesData2"
+        :chartLoading="chartLoading2"
         yAxisName="收藏次数"
         formatter="《{b}》:收藏次数:{c}<br>点击查看该歌单详情"
         width="600px"
@@ -80,7 +80,9 @@ export default {
       seriesData1: [],
       title2: "",
       xAxisData2: [],
-      seriesData2: []
+      seriesData2: [],
+      chartLoading1:false,
+      chartLoading2:false
     };
   },
   components: {
@@ -118,12 +120,14 @@ export default {
       });
     },
     _getSongRank() {
+      this.chartLoading1 = true;
       getSongRank().then(data => {
         if (data.songList.length) {
           this.songRank = this._encaseSongList(data.songList);
+          this.chartLoading1 = false;
           this.title1 = "歌曲收藏榜";
         }
-      });
+      })
     },
     _encaseSongList(list) {
       let result = [],
@@ -167,6 +171,7 @@ export default {
       });
     },
     _getAlbumRank() {
+      this.chartLoading2 = true;
       getAlbumRank().then(data => {
         if (data.albumList.length) {
           this.albumRank = data.albumList;
@@ -178,6 +183,7 @@ export default {
           });
           this.seriesData2 = _seriesData;
           this.xAxisData2 = _xAxisData;
+          this.chartLoading2 = false;
           this.title2 = "歌单收藏榜";
         }
       });

@@ -42,30 +42,7 @@
           <div class="num">{{playList.length}}</div>
         </div>
       </div>
-      <div class="download">
-        <button @click="downLoad">下载</button>
-        <div class="warn" v-if="warnShow">
-          <div class="mes">
-            你将进行下载，文件来自QQ音乐。
-            <br>音频文件仅供内部交流用途，请勿外传，请勿用作商业用途。
-            <br>支持正版，从你我做起。
-            <br>
-            <font>千万正版音乐海量无损曲库尽在QQ音乐。</font>
-            <br>
-            <a href="https://y.qq.com/" target="_blank">点击这里</a>
-            前往QQ音乐听更多高品质音乐。
-          </div>
-          <div class="button">
-            <div @click="warnShow=false">取消</div>
-            <a
-              :href="currentSong.src"
-              @click="warnShow=false"
-              :download="currentSong.name+'(来自QQ音乐).m4a'"
-              target="_blank"
-            >确定</a>
-          </div>
-        </div>
-      </div>
+
       <div class="full-screen">
         <button @click="fullScreen">全屏模式</button>
       </div>
@@ -268,6 +245,7 @@ export default {
         },
         err => {
           this.curLyric_t = err;
+          this.SET_PLAYING(true);
         }
       );
     },

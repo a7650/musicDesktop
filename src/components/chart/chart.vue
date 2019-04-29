@@ -12,23 +12,18 @@ const option = {
 
   tooltip: {},
 
-  legend: {
-    // data:['销量']
-  },
+  legend: {},
 
   color: ["rgb(255, 34, 83)"],
 
   xAxis: {
-    //   data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
     data: [],
     name: "歌曲"
   },
 
   series: [
     {
-      // name: "播放量/万",
       type: "bar",
-      // data: [5, 20, 36, 10, 10, 20]
       data: []
     }
   ],
@@ -46,19 +41,12 @@ const option = {
       dataView: { show: false },
       magicType: { type: ["line", "bar"] },
       restore: {},
-      saveAsImage: {
-        // emphasis:{
-        //   iconStyle:{
-        //     color:'rgb(255, 34, 83)'
-        //   }
-        // }
-      }
+      saveAsImage: {}
     },
     orient: "vertical",
     right: 40,
     emphasis: {
       iconStyle: {
-        // color: "rgb(255, 34, 83)",
         borderColor: "rgb(255, 34, 83)"
       }
     }
@@ -66,7 +54,16 @@ const option = {
 };
 
 export default {
-  props: ["title", "xAxisData", "seriesData", "yAxisName","formatter","width","height"],
+  props: [
+    "title",
+    "xAxisData",
+    "seriesData",
+    "yAxisName",
+    "formatter",
+    "width",
+    "height",
+    "chartLoading"
+  ],
   data() {
     return {};
   },
@@ -78,14 +75,27 @@ export default {
     });
   },
   watch: {
-    title(n,o) {
-      if(!n){return};
+    title(n, o) {
+      if (!n) {
+        return;
+      }
       option.title.text = this.title;
       option.xAxis.data = this.xAxisData;
       option.yAxis.name = this.yAxisName;
       option.series[0].data = this.seriesData;
       option.tooltip.formatter = this.formatter;
       this.Chart.setOption(option);
+    },
+    chartLoading(n, o) {
+      if (n) {
+        this.Chart.showLoading({
+          text:"",
+          color: "rgb(255, 34, 83)",
+          maskColor: "rgba(255, 255, 255, 0.8)",
+        });
+      } else {
+        this.Chart.hideLoading();
+      }
     }
   }
 };

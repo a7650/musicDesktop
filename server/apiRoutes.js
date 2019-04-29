@@ -1,6 +1,6 @@
+const _FN = require("./apiRoutes_fn")
 const express = require('express')
 const app = express()
-const _FN = require("./apiRoutes_fn")
 
 const apiRoutes = express.Router()
 

@@ -25,8 +25,8 @@
 
 <script>
 import mHeader from "base/mHeader/mHeader";
-import { createSong} from "common/js/song";
-import {getSongVkey} from "api/song";
+import { createSong } from "common/js/song";
+import { getSongVkey } from "api/song";
 import { formateHot, un_insertionSort2 } from "common/js/tools";
 import { getSongList, getComment } from "api/rank";
 import { mapGetters, mapActions } from "vuex";
@@ -41,7 +41,7 @@ export default {
       seriesData: [],
       yAxisName: "",
       err_message: "",
-      formatter:""
+      formatter: ""
     };
   },
   computed: {
@@ -71,10 +71,10 @@ export default {
       });
     },
     _getSongList(id = this.singer.id || this.$route.params.id) {
-      if(id==4){
+      if (id == 4) {
         this.yAxisName = "流行指数/%";
-        this.formatter = "{b}:{c}%<br>点击即可播放该歌曲"
-      }else{
+        this.formatter = "{b}:{c}%<br>点击即可播放该歌曲";
+      } else {
         this.yAxisName = "上升指数/位";
         this.formatter = "{b}:本周上升{c}位<br>点击即可播放该歌曲";
       }
@@ -83,10 +83,9 @@ export default {
           this.err_message = "这个榜单暂时没有歌曲，去看看别的吧";
           return;
         }
-        this.title = data.topinfo.ListName;
         this.songList = this._encaseSongList(data.songlist, id);
+        this.title = data.topinfo.ListName;
       });
-
     },
     _encaseSongList(list, id) {
       let result = [],
@@ -99,7 +98,7 @@ export default {
           if (id == 4) {
             let _r = (parseFloat(item.in_count) * 100).toFixed(0);
             r = _r + "%";
-            
+
             _seriesData.push(+_r);
             _xAxisData.push(item.data.songname);
           } else {
@@ -131,14 +130,14 @@ export default {
     },
     ...mapActions(["selectSong"])
   },
-created(){
-  this._getSongList();
-  // console.log(1)
-},
+  created() {
+    this._getSongList();
+    // console.log(1)
+  },
   watch: {
     singer(n, o) {
       // console.log(o,n)
-      if(o.id!==n.id){
+      if (o.id !== n.id) {
         this._getSongList();
       }
     }

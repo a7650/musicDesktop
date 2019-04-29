@@ -13,7 +13,7 @@ Vue.mixin({
   mounted() {
     if (this.$refs.float)
       this.float = this.$refs.float.float
-  }
+    }
 })
 new Vue({
   router,

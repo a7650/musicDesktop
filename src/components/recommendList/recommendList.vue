@@ -12,6 +12,7 @@ import { getRecommend } from "api/recommend";
 import loading from "base/loading/loading";
 import { mapActions } from "vuex";
 import {getSongVkey} from "api/song";
+import { song } from "common/js/song";
 export default {
   data() {
     return {
@@ -35,18 +36,21 @@ export default {
       });
     },
     encaseSongList(list) {
-      list.forEach(item => {
-        getSongVkey(item.mid).then(res => {
-          let vkey = res.data.items[0].vkey;
-          item.src = vkey
-            ? `http://dl.stream.qqmusic.qq.com/C400${
-                item.mid
-              }.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`
-            : "";
-          item.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`;
-        });
+      let result = [];
+       list.forEach((item,i) => {
+      result.push(new song(item));
+      let item2 = result[i]
+      getSongVkey(item.mid).then(res => {
+        let vkey = res.data.items[0].vkey;
+        item2.src = vkey
+          ? `http://dl.stream.qqmusic.qq.com/C400${
+              item.mid
+            }.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`
+          : "";
+        item2.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`;
       });
-      return list;
+    });
+      return result;
     },
     ...mapActions(["selectSong"])
   },
