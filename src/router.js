@@ -64,6 +64,11 @@ export default new Router({
       component: () => import('components/search/search')
     },
     {
+      name:"zhida",
+      path:"/zhida/:id",
+      component: () => import('components/singerDetail/singerDetail')
+    },
+    {
       name: "adm",
       path: "/adm",
       component: () => import('components/adm/index')

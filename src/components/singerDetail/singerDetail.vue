@@ -114,7 +114,7 @@ export default {
     },
     _getAlbumNum() {
       search(this.name, 1, 1, 1).then(data => {
-        this.albumNum = data.data.zhida.albumnum;
+        this.albumNum = data.zhida.albumnum;
       });
     },
     _getMore(n) {

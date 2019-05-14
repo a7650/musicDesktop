@@ -5,7 +5,12 @@ import store from './store/index'
 import 'common/less/index.less'
 import float from "base/float/float"
 
+// Vue.prototype.$eventBus = new Vue()
+
 Vue.config.productionTip = false
+
+
+
 
 Vue.component('float', float)
 

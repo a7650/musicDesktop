@@ -1,25 +1,20 @@
-import {commonParams, options,PRODUCTION} from './config'
-import axios from 'axios'
+import { commonParams, options } from './config'
 import jsonp from 'common/js/jsonp'
+import { get } from "./axiosConfig"
 
-export function _getLyric(mid){
-
-    // const url = 'http://localhost:8002/api/getLyric'
-    const url = PRODUCTION ? 'http://106.12.198.147/music/api/getLyric' : '/getLyric';
-    const data = Object.assign({},commonParams,{
-        format:"json",
-        pachetime:(new Date()).valueOf(),
-        songmid:mid,
-        loginUin:0,
-        hostUin:0,
-        notic:0,
-        platform:'yqq',
-        needNewCode:0
+export function _getLyric(mid) {
+    const data = Object.assign({}, commonParams, {
+        format: "json",
+        pachetime: (new Date()).valueOf(),
+        songmid: mid,
+        loginUin: 0,
+        hostUin: 0,
+        notic: 0,
+        platform: 'yqq',
+        needNewCode: 0
     });
-    return axios.get(url,{
-        params:data
-    }).then(response => {
-        let res = response.data;
+    return get("/getLyric", data).then(data => {
+        let res = data;
         return Promise.resolve(res);
     })
 }

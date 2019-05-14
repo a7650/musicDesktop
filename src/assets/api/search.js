@@ -1,6 +1,6 @@
 import jsonp from 'common/js/jsonp'
-import { commonParams, options, PRODUCTION } from './config'
-import axios from 'axios'
+import { commonParams, options } from './config'
+import { get } from "./axiosConfig"
 
 export function getHotKey() {
     const url = 'https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg'
@@ -14,8 +14,6 @@ export function getHotKey() {
 }
 
 export function search(query,page,perpage,zhida) {
-    // const url = 'http://localhost:8002/api/search'
-    const url = PRODUCTION ? 'http://106.12.198.147/music/api/getSearch' : '/getSearch'
     const data = Object.assign({}, commonParams, {
       w: query,
       p: page,
@@ -35,9 +33,7 @@ export function search(query,page,perpage,zhida) {
       format: 'json'
     })
   
-    return axios.get(url, {
-      params: data
-    }).then((res) => {
-      return Promise.resolve(res.data)
+    return get("/getSearch", data).then((data) => {
+      return Promise.resolve(data.data)
     })
   }

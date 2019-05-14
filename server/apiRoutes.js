@@ -4,6 +4,7 @@ const app = express()
 
 const apiRoutes = express.Router()
 
+//LocalServer
 apiRoutes.get('/sessionLogin', _FN.sessionLogin)
 
 apiRoutes.post('/login', _FN.login)
@@ -24,6 +25,19 @@ apiRoutes.get('/getSongRank', _FN.getSongRank)
 
 apiRoutes.get('/getAlbumRank', _FN.getAlbumRank)
 
+
+//ProxyServer 
+apiRoutes.get('/getDiscList',_FN.getDiscList)
+
+apiRoutes.get('/getDiscSonglist',_FN.getDiscSonglist)
+
+apiRoutes.get('/getSearch',_FN.getSearch)
+
+apiRoutes.get('/getSingerList',_FN.getSingerList)
+
+apiRoutes.get('/getSongList',_FN.getSongList)
+
+apiRoutes.get('/getLyric',_FN.getLyric)
 
 
 module.exports = apiRoutes

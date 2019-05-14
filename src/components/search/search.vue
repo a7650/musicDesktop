@@ -120,7 +120,7 @@ export default {
     },
     selectZhida() {
       this.$router.push({
-        name: "singerDetail",
+        name: "zhida",
         params: {
           id: this.zhida.singermid + "_" + this.zhida.singername
         }
@@ -152,8 +152,8 @@ export default {
       this.loadingText = "正在搜索";
       this.initData();
       search(this.i_searchText, 1, prePage, 1).then(data => {
-        let song = data.data.song;
-        if (data.code !== 0 || !song.list.length) {
+        let song = data.song;
+        if (!song.list.length) {
           this.loadingText = `搜索不到《${this.i_searchText}》,换个试试吧`;
           return;
         }
@@ -164,8 +164,8 @@ export default {
           this.$set(this.songList, i, []);
         }
         this.songList[1] = _encaseSongList(song.list);
-        if (data.data.zhida.type === 2) {
-          this.zhida = data.data.zhida;
+        if (data.zhida.type === 2) {
+          this.zhida = data.zhida;
         }
         this.SAVE_SEARCHHISTORY(this.i_searchText);
       });

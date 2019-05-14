@@ -1,16 +1,13 @@
-import axios from "axios"
-import { PRODUCTION } from './config'
+import { get } from "./axiosConfig"
 
 export function getSongRank() {
-    const url = PRODUCTION ? 'http://106.12.198.147/music2/api/getSongRank' : 'http://localhost:8002/api/getSongRank';
-    return axios.get(url).then(data => {
-        return Promise.resolve(data.data)
+    return get("/getSongRank").then(data => {
+        return Promise.resolve(data)
     });
 }
 
 export function getAlbumRank() {
-    const url = PRODUCTION ? 'http://106.12.198.147/music2/api/getAlbumRank' : 'http://localhost:8002/api/getAlbumRank';
-    return axios.get(url).then(data => {
-        return Promise.resolve(data.data)
+    return get("/getAlbumRank").then(data => {
+        return Promise.resolve(data)
     });
 }

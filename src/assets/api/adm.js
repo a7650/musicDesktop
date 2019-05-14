@@ -1,28 +1,22 @@
-
-import axios from "axios"
-import {PRODUCTION } from './config'
-
-const addUrl = PRODUCTION ? 'http://106.12.198.147/music2/api/addSong' : 'http://localhost:8002/api/addSong';
-// const addUrl ='http://localhost:8002/api/addSong';
+import { get, post } from "./axiosConfig"
 
 export function addSingle(song) {
-    return axios.post(addUrl,[song])
-    .then(data=>{
-        return Promise.resolve(data.data)
-    })
+    return post("/addSong", [song])
+        .then(data => {
+            return Promise.resolve(data)
+        })
 }
 
 export function addAll(list) {
-    return axios.post(addUrl,list)
-    .then(data=>{
-        return Promise.resolve(data.data)
-    })
+    return post("/addSong", list)
+        .then(data => {
+            return Promise.resolve(data)
+        })
 }
 
 export function getUserList(params) {
-    const url = 'http://localhost:8002/api/getUserList'
-    return axios.get(url)
-    .then(data=>{
-        return Promise.resolve(data.data)
-    })
+    return get("/getUserList")
+        .then(data => {
+            return Promise.resolve(data)
+        })
 }

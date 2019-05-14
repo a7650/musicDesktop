@@ -132,6 +132,7 @@ export default {
   },
   created() {
     this._getDiscSongList();
+    console.log('created')
     // console.log(this.singer)
   }
 };

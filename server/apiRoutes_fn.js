@@ -1,8 +1,8 @@
 const MDB = require('mongodb').MongoClient
 const crypto = require("crypto")
 const url = 'mongodb://localhost:27017'
-
-const sortInterval = 1000*60*60   //每小时排序
+const axios = require('axios')
+const sortInterval = 1000 * 60 * 60   //每小时排序
 
 function getHash(val) {
     let hash = crypto.createHash("sha256");
@@ -44,28 +44,28 @@ const DB = {
 
 let rankSortTimer = setInterval(() => {
     DB.get('rank', rank => {
-        rank.find({ flag: 2}).toArray((err, _res) => {
+        rank.find({ flag: 2 }).toArray((err, _res) => {
             let albumList = _res[0].albumList;
-            albumList.sort((a,b)=>{
-                return b.num-a.num
+            albumList.sort((a, b) => {
+                return b.num - a.num
             })
-            rank.updateOne({flag:4},{
-                $set:{albumList:albumList.splice(0,100)}
+            rank.updateOne({ flag: 4 }, {
+                $set: { albumList: albumList.splice(0, 100) }
             })
         })
-        rank.find({ flag: 1}).toArray((err, _res) => {
+        rank.find({ flag: 1 }).toArray((err, _res) => {
             let songList = _res[0].songList;
-            songList.sort((a,b)=>{
-                return b.num-a.num
+            songList.sort((a, b) => {
+                return b.num - a.num
             })
-            rank.updateOne({flag:3},{
-                $set:{songList:songList.splice(0,100)}
+            rank.updateOne({ flag: 3 }, {
+                $set: { songList: songList.splice(0, 100) }
             })
         })
     })
 }, sortInterval);
 
-module.exports = {
+const LocalServer = {
     sessionLogin(req, res) {
         let sess = req.session
         if (sess && sess.login === 1) {
@@ -178,11 +178,6 @@ module.exports = {
         DB.get('rank', rank => {
             rank.find({ flag: 2, "albumList.disstid": reqData.disstid }).toArray((err, _res) => {
                 if (_res.length) {
-                    //  _res[0].albumList.forEach(function(item){
-                    //     if(item.disstid === reqData.disstid){
-                    //         console.log(item.num)
-                    //     }
-                    // })
                     rank.updateOne({ flag: 2, "albumList.disstid": reqData.disstid }, {
                         $inc: { "albumList.$.num": 1 }
                     })
@@ -210,4 +205,97 @@ module.exports = {
         })
     }
 }
+
+const ProxyServer = {
+    getDiscList(req, res) {
+        const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+        axios.get(url, {
+            params: req.query
+        }).then(response => {
+            res.json(response.data)
+        }).catch(e => {
+            console.log(e)
+        })
+    },
+    getDiscSonglist(req, res) {
+        const url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
+        axios.get(url, {
+            headers: {
+                referer: 'https://y.qq.com/n/yqq/playsquare'
+            },
+            params: req.query
+        }).then(response => {
+            res.json(response.data)
+        }).catch(e => {
+            console.log(e);
+        })
+    },
+    getSearch(req, res) {
+        const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
+        axios.get(url, {
+            headers: {
+                origin: 'https://y.qq.com',
+                referer: 'https://y.qq.com/m/index.html',
+            },
+            params: req.query
+        }).then(response => {
+            res.json(response.data)
+        }).catch(e => {
+            console.log(e)
+        })
+    },
+    getSingerList(req, res) {
+        const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+        axios.get(url, {
+            headers: {
+                referer: 'https://y.qq.com/portal/singer_list.html'
+            },
+            params: req.query
+        }).then(response => {
+            res.json(response.data)
+        }).catch(e => {
+            console.log(e)
+        })
+    },
+    getSongList(req, res) {
+        const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg'
+        axios.get(url, {
+            headers: {
+                referer: 'https://y.qq.com/n/yqq/singer/'
+            },
+            params: req.query
+        }).then(response => {
+            res.json(response.data)
+        }).catch(e => {
+            console.log(e)
+        })
+    },
+    getLyric(req, res) {
+        const url = 'https://szc.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg';
+        axios.get(url, {
+            headers: {
+                referer: 'https://y.qq.com/portal/player.html'
+            },
+            params: req.query
+        }).then(response => {
+            let data = response.data
+            if (typeof data === 'string') {
+                const reg = /^\w+\(({.+})\)$/
+                const matches = data.match(reg)
+                if (matches) {
+                    data = JSON.parse(matches[1])
+                }
+            }
+            res.json(data)
+        }).catch(e => {
+            console.log(e)
+        })
+    }
+}
+
+
+
+
+
+module.exports = { ...LocalServer, ...ProxyServer }
 
