@@ -203,6 +203,31 @@ const LocalServer = {
                 res.json({ albumList: _res[0].albumList })
             })
         })
+    },
+    releaseSinger(req,res){
+        res.end()
+        let id = req.query.id;
+        DB.get('singer', singer => {
+            singer.updateOne({ flag: 1 }, {
+                $pull: { closed:id }
+            })
+        })
+    },
+    closeSinger(req,res){
+        res.end()
+        let id = req.query.id;
+        DB.get('singer', singer => {
+            singer.updateOne({ flag: 1 }, {
+                $addToSet: { closed:id }
+            })
+        })
+    },
+    getClosedSinger(req,res){
+        DB.get('singer', singer => {
+            singer.find({flag:1}).toArray((err,_res)=>{
+                res.json(_res[0].closed)
+            })
+        })
     }
 }
 

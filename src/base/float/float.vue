@@ -52,7 +52,7 @@ export default {
   z-index: 999;
   top: 50%;
   left: 50%;
-  margin-left: -110px;
+  margin-left: -125px;
   margin-top: -60px;
   transition: 0.2s;
   .mes {

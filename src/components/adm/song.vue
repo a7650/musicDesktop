@@ -120,7 +120,7 @@ export default {
     },
     _getMore(n) {
       search(this.i_searchText, n, prePage).then(data => {
-        this.songList[n] = _encaseSongList(data.data.song.list);
+        this.songList[n] = _encaseSongList(data.song.list);
       });
     },
     selectPage(n) {
@@ -145,8 +145,8 @@ export default {
       this.loadingText = "正在搜索";
       this.initData();
       search(this.i_searchText, 1, prePage, 1).then(data => {
-        let song = data.data.song;
-        if (data.code !== 0 || !song.list.length) {
+        let song = data.song;
+        if (!song.list.length) {
           this.loadingText = `搜索不到《${this.i_searchText}》,换个试试吧`;
           return;
         }
@@ -260,13 +260,13 @@ export default {
     .no-wrap;
   }
   .name {
-    font-size: 22px;
+    font-size: 18px;
     width: 60%;
   }
   .singer {
     width: 30%;
     color: @color-text-dd;
-    font-size: 18px;
+    font-size: 16px;
   }
   .delete {
     font-size: 18px;

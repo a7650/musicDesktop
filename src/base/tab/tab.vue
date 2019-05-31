@@ -34,13 +34,13 @@
       </div>
       <div class="login">
         <button v-if="userStatus">{{userStatus}}</button>
-        <button v-else @click="loginShow=true">登录</button>
+        <button v-else @click="LOGIN(true)">登录</button>
       </div>
     </div>
     <transition name="filter">
-      <div class="filter" v-show="loginShow" @click="loginShow=false"></div>
+      <div class="filter" v-show="loginWindow" @click="LOGIN(false)"></div>
     </transition>
-    <login v-show="loginShow" @close="loginShow=false"></login>
+    <login v-show="loginWindow" @close="LOGIN(false)"></login>
     <float ref="float"></float>
   </div>
 </template>
@@ -58,7 +58,6 @@ export default {
       boxShow: false,
       hotKey: [],
       searchText: "",
-      loginShow: false,
       bgX: 0
     };
   },
@@ -69,7 +68,7 @@ export default {
     login
   },
   computed: {
-    ...mapGetters(["userStatus"])
+    ...mapGetters(["userStatus","loginWindow"])
   },
   methods: {
     _sessionLogin() {
@@ -101,7 +100,7 @@ export default {
         name: "search"
       });
     },
-    ...mapMutations(["SET_SEARCHTEXT", "SET_USERSTATUS"])
+    ...mapMutations(["SET_SEARCHTEXT", "SET_USERSTATUS","LOGIN"])
   },
   created() {
     this._getHotKey();

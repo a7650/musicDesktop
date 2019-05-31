@@ -11,6 +11,7 @@ export function getDiscList(id) {
     data: d,
     format: 'json'
   })
+  //http://localhost:8002/api/getDiscList
   return get('/getDiscList', data).then((data) => {
     let list = data.playlist.data.v_playlist;
     return Promise.resolve(list);

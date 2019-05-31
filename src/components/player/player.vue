@@ -55,7 +55,7 @@
           </div>
           <div class="title">播放列表({{playList.length}})</div>
         </header>
-        <miniList @selectSong="selectSong" @deleteSong="_deleteSong"></miniList>
+        <miniList @selectSong="selectSong" @deleteSong="_deleteSong" @notLogged="notLogged"></miniList>
       </div>
     </transition>
     <fullScreenPlayer
@@ -131,6 +131,9 @@ export default {
     fullScreenPlayer
   },
   methods: {
+    notLogged(){
+      this.LOGIN(true)
+    },
     closeFull() {
       this.full = false;
     },
@@ -265,6 +268,7 @@ export default {
       "SET_PLAYING",
       "SET_CURRENTINDEX",
       "SET_PLAYMODE",
+       "LOGIN",
       "SET_PLAYLIST"
     ]),
     ...mapActions(["deleteSong"])

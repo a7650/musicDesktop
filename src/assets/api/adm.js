@@ -20,3 +20,23 @@ export function getUserList(params) {
             return Promise.resolve(data)
         })
 }
+
+export function releaseSinger(id) {
+    return get("/releaseSinger",{id})
+        .then(data => {
+            return Promise.resolve(data)
+        })
+}
+
+export function closeSinger(id) {
+    return get("/closeSinger", { id })
+        .then(data => {
+            return Promise.resolve(data)
+        })
+}
+
+export function getClosedSinger() {
+    return get("/getClosedSinger").then(data => {
+        return Promise.resolve(data)
+    })
+}

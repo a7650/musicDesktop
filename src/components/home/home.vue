@@ -86,7 +86,6 @@ export default {
     this._allList = shuffle(allList.splice(0, 10));
     this.selectDisc(0);
   }
-
 };
 </script>
 

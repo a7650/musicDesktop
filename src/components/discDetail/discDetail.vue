@@ -65,10 +65,14 @@ export default {
     songList
   },
   computed: {
-    ...mapGetters(["singer"])
+    ...mapGetters([ "userStatus","singer"])
   },
   methods: {
     collectAlbum(){
+       if (!this.userStatus) {
+        this.LOGIN(true);
+        return;
+      }
       if(this.isCollect){
         this._deleteAlbum()
       }else{
@@ -127,7 +131,7 @@ export default {
       });
 
     },
-    ...mapMutations(["REFRESH_COLLECTALBUM"]),
+    ...mapMutations(["REFRESH_COLLECTALBUM","LOGIN"]),
     ...mapActions(["selectSong"])
   },
   created() {

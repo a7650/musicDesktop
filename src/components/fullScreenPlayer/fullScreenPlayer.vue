@@ -61,9 +61,10 @@
       <transition name="play-list">
         <div class="play-list" v-show="listShow">
           <div class="title">播放列表({{playList.length}})</div>
-          <miniList @selectSong="selectSong" @deleteSong="deleteSong"></miniList>
-      </div>
+          <miniList @selectSong="selectSong" @deleteSong="deleteSong" @notLogged="notLogged"></miniList>
+        </div>
       </transition>
+      <float ref="float"></float>
     </div>
   </transition>
 </template>
@@ -72,35 +73,46 @@
 import processBar from "base/process-bar/process-bar";
 import { mapGetters, mapMutations } from "vuex";
 import { isFavorite } from "common/js/favorite";
-import miniList from "base/miniList/miniList"
+import miniList from "base/miniList/miniList";
 export default {
   props: ["curLyric_l", "Lyric", "currentTime", "modeIcon"],
   data() {
     return {
-      listShow:false
+      listShow: false
     };
   },
-  components:{
-    processBar,miniList
+  components: {
+    processBar,
+    miniList
   },
   computed: {
     LyricList() {
       return this.Lyric && this.Lyric.textContent;
     },
     favoriteIcon() {
-      let mid = this.favoriteMid;
-      return isFavorite(this.currentSong.mid)
-        // ? "icon-favorite"
-        // : "icon-unfavorite";
+      let mid = this.favoriteMid
+      return isFavorite(this.currentSong.mid);
+      // ? "icon-favorite"
+      // : "icon-unfavorite";
     },
-    ...mapGetters(["currentSong", "playing", "playList", "favoriteMid"])
+    ...mapGetters([
+      "userStatus",
+      "currentSong",
+      "playing",
+      "playList",
+      "favoriteMid",
+      "miniListFav"
+    ])
   },
   methods: {
-    deleteSong(){
-      this.$emit("deleteSong")
+    notLogged(){
+      this.float("请先登录");
     },
-    selectSong(index){
-      this.$emit("selectSong",index)
+    deleteSong(index) {
+      this.$emit("deleteSong",index);
+    },
+    selectSong(index) {
+      this.$emit("selectSong", index);
     },
     prevSong() {
       this.$emit("prevSong");
@@ -121,17 +133,22 @@ export default {
       if (!song.src) {
         return;
       }
+      if (!this.userStatus) {
+        this.float("请先登录");
+        return;
+      }
       let m = isFavorite(song.mid);
       if (m) {
         this.DELETE_FAVORITE(song);
       } else {
         this.ADD_FAVORITE(song);
       }
+      this.SET_MINILISTFAV([song.mid,!m])
     },
     closeFull() {
       this.$emit("closeFull");
     },
-    ...mapMutations(["ADD_FAVORITE", "DELETE_FAVORITE"])
+    ...mapMutations(["ADD_FAVORITE", "DELETE_FAVORITE", "SET_MINILISTFAV"])
   },
   created() {
     this.$emit("con");
@@ -246,7 +263,7 @@ header {
     height: 50px;
     line-height: 50px;
     color: rgba(255, 255, 255, 0.4);
-    transition: .2s;
+    transition: 0.2s;
     transform-origin: left center;
     .no-wrap;
   }
@@ -333,16 +350,17 @@ header {
       color: #ff0000;
     }
   }
-  .icon-favorite,.icon-unfavorite{
+  .icon-favorite,
+  .icon-unfavorite {
     display: block;
-     animation: fav .4s;
+    animation: fav 0.4s;
   }
-  .icon-unfavorite:hover{
+  .icon-unfavorite:hover {
     color: #ff0000;
   }
 }
 
-.play-list{
+.play-list {
   width: 400px;
   // height: 100%;
   position: absolute;
@@ -350,18 +368,18 @@ header {
   top: 0;
   bottom: 50px;
   z-index: 99;
-  background-color: rgba(0, 0, 0, .6);
-  transition: .3s;
-  .title{
+  background-color: rgba(0, 0, 0, 0.6);
+  transition: 0.3s;
+  .title {
     height: 30px;
     text-align: center;
     color: #fff;
     line-height: 30px;
   }
-
 }
 
-.play-list-enter,.play-list-leave-to{
+.play-list-enter,
+.play-list-leave-to {
   transform: translateX(100%);
 }
 

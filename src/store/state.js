@@ -15,6 +15,8 @@ const state = {
     collectAlbum:getCollectAlbum(),
     searchText:"",
     searchHistory:getSearchHistory(),
-    userStatus:""
+    userStatus:"",
+    loginWindow:false,
+    miniListFav:{}
 }
 export default state

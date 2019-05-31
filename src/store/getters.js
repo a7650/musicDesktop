@@ -26,4 +26,6 @@ export const searchHistory = state => state.searchHistory
 
 export const userStatus = state => state.userStatus
 
+export const loginWindow = state => state.loginWindow
 
+export const miniListFav = state => state.miniListFav

@@ -7,7 +7,7 @@
           @click="selectSinger(singer)"
           class="item"
           :class="{'hot':index<12}"
-          v-for="(singer,index) in singerList"
+          v-for="(singer,index) in filterList"
           :key="singer.id"
         >
           <div class="pic" v-if="index<12">
@@ -25,6 +25,8 @@
 import { getSingerList } from "api/singer";
 import { mapMutations } from "vuex";
 import mHeader from "base/mHeader/mHeader";
+import { getClosedSinger } from "api/adm";
+
 export default {
   data() {
     return {
@@ -34,13 +36,19 @@ export default {
   components: {
     mHeader
   },
+  computed:{
+    filterList(){
+      return this.singerList.filter(item=>{
+        return !item.closed
+      })
+    }
+  },
   methods: {
-    _getSingerList() {
-      getSingerList().then(data => {
-        // console.log(data.singerlist)
-        let singerList = []; //官方返回的数据中 l为小写
+    async _getSingerList() {
+      let singerList = await getSingerList().then(data => {
+        let list = [];
         data.singerlist.forEach(item => {
-          singerList.push({
+          list.push({
             country: item.country,
             id: item.singer_id,
             mid: item.singer_mid,
@@ -49,6 +57,30 @@ export default {
               item.singer_mid
             }.jpg?max_age=2592000`
           });
+        });
+        return list;
+      });
+      return singerList;
+    },
+    async getData() {
+      let _getSingerList = new Promise(async (res, rej) => {
+        let l = await this._getSingerList();
+        res(l);
+      });
+      let _getClosedSinger = new Promise((res, rej) => {
+        getClosedSinger().then(data => {
+          res(data);
+        });
+      });
+
+      Promise.all([_getSingerList, _getClosedSinger]).then(res => {
+        let [singerList, closedSinger] = res;
+        let map = {};
+        closedSinger.forEach(item => {
+          map[item] = true;
+        });
+        singerList.forEach(item => {
+          item.closed = !!map[item.id];
         });
         this.singerList = singerList;
       });
@@ -72,7 +104,7 @@ export default {
     })
   },
   created() {
-    this._getSingerList();
+    this.getData();
   }
 };
 </script>

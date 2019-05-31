@@ -2,8 +2,8 @@
   <div class="page-search">
     <div class="search">
       <div class="input-content">
-        <input type="text" v-model="i_searchText" @focus="historyShow=true" @blur="historyHide">
-        <button @click="_search">搜 索</button>
+        <input type="text" v-model="i_searchText" @focus="historyShow=true" @blur="historyHide" @keyup.enter="_search">
+        <button @click="_search" >搜 索</button>
         <transition name="a">
           <div class="search-history" v-show="searchHistory.length&&historyShow">
             <ul>
@@ -128,7 +128,7 @@ export default {
     },
     _getMore(n) {
       search(this.i_searchText, n, prePage).then(data => {
-        this.songList[n] = _encaseSongList(data.data.song.list);
+        this.songList[n] = _encaseSongList(data.song.list);
       });
     },
     selectPage(n) {
@@ -218,6 +218,7 @@ export default {
   position: relative;
   perspective: 1000px;
   background-color: @color-theme2;
+  z-index: 98;
   .input-content {
     position: absolute;
     top: 50%;
@@ -261,7 +262,7 @@ export default {
   left: 50%;
   margin-left: -278px;
   border-top: 1px solid @color-line;
-  z-index: 99;
+  z-index: 999;
   padding: 5px 0;
   transform-origin: 50% 0;
   transition: 0.3s;

@@ -1,28 +1,30 @@
 <template>
   <div class="mine">
-    <button class="report" @click="reportDetail=true">查看我的听歌报告</button>
-   <transition name="report-detail">
+    <!-- <button class="report" @click="reportDetail=true">查看我的听歌报告</button> -->
+    <!-- <transition name="report-detail">
       <div class="report-detail" v-show="reportDetail">
-      <h3>听歌报告</h3>
-      <div class="report-content"></div>
-    </div>
-   </transition>
+        <h3>听歌报告</h3>
+        <div class="report-content"></div>
+      </div>
+    </transition>-->
     <div class="content">
       <div class="my-album">
         <mHeader>收藏的歌曲</mHeader>
-        <div class="tip" v-if="!songList.length">你没有收藏歌曲，去听听歌吧🎵</div>
-        <songList @selectSong="_selectSong" class="list" :songList="songList" v-else></songList>
+        <div class="tip" v-if="!userStatus">登录后可查看</div>
+        <div class="tip" v-if="userStatus&&!songList.length">你没有收藏歌曲，去听听歌吧🎵</div>
+        <songList @selectSong="_selectSong" class="list" :songList="songList" v-if="songList.length"></songList>
       </div>
       <div class="line"></div>
       <div class="my-collection">
         <mHeader>收藏的歌单</mHeader>
-        <div class="tip" v-if="!collectAlbum.length">你没有收藏歌单，去收藏一个吧💽</div>
+        <div class="tip" v-if="!userStatus">登录后可查看</div>
+        <div class="tip" v-if="userStatus&&!discList.length">你没有收藏歌单，去收藏一个吧💽</div>
         <discList
           @selectDiscItem="selectDiscItem"
           class="list disc-list"
-          :discList="collectAlbum"
+          :discList="discList"
           :noLoading="1"
-          v-else
+          v-if="discList.length"
         ></discList>
       </div>
     </div>
@@ -41,7 +43,7 @@ export default {
   data() {
     return {
       songList: [],
-      reportDetail:false
+      discList: []
     };
   },
   components: {
@@ -50,7 +52,7 @@ export default {
     discList
   },
   computed: {
-    ...mapGetters(["collectAlbum","userStatus"])
+    ...mapGetters(["collectAlbum", "userStatus"])
   },
   methods: {
     selectDiscItem(item) {
@@ -67,25 +69,41 @@ export default {
         index
       });
     },
+    getData() {
+      let list = getCreateAlbum("我的收藏").songList;
+      let result = [];
+      list.forEach((item, i) => {
+        result.push(new song(item));
+        let item2 = result[i];
+        getSongVkey(item.mid).then(res => {
+          let vkey = res.data.items[0].vkey;
+          item2.src = vkey
+            ? `http://dl.stream.qqmusic.qq.com/C400${
+                item.mid
+              }.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`
+            : "";
+          item2.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`;
+        });
+      });
+      this.songList = result;
+      this.discList = this.collectAlbum;
+    },
+    ...mapMutations(["LOGIN"]),
     ...mapActions(["selectSong"])
   },
   activated() {
-    let list = getCreateAlbum("我的收藏").songList;
-    let result = [];
-    list.forEach((item,i) => {
-      result.push(new song(item));
-      let item2 = result[i]
-      getSongVkey(item.mid).then(res => {
-        let vkey = res.data.items[0].vkey;
-        item2.src = vkey
-          ? `http://dl.stream.qqmusic.qq.com/C400${
-              item.mid
-            }.m4a?fromtag=38&guid=5931742855&vkey=${vkey}`
-          : "";
-        item2.name = vkey ? item.name : `<del>${item.name}(暂无音源)</del>`;
-      });
-    });
-    this.songList = result;
+    if (!this.userStatus) {
+      this.LOGIN(true);
+      return;
+    }
+    this.getData();
+  },
+  watch: {
+    userStatus(n, o) {
+      if (n) {
+        this.getData();
+      }
+    }
   }
 };
 </script>
@@ -100,7 +118,6 @@ export default {
   color: #000;
   height: 100%;
   box-sizing: border-box;
-  // min-width: 1200px;
   padding-bottom: 70px;
   overflow: hidden;
 }
@@ -145,31 +162,31 @@ export default {
   background-color: @color-line;
   margin: 130px 0;
 }
-.report{
+.report {
   padding: 5px 10px;
   background-color: @color-theme;
   color: #fff;
   border: none;
   margin-left: 10px;
   border-radius: 5px;
-  transition: .2s;
+  transition: 0.2s;
   position: absolute;
   margin-top: 5px;
 }
-.report:hover{
+.report:hover {
   box-shadow: 0 0 10px @color-theme;
   cursor: pointer;
 }
-.report-detail{
+.report-detail {
   position: absolute;
   width: 800px;
   background-color: #fff;
-  box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   z-index: 99;
   top: 70px;
   bottom: 50px;
-  transition: .4s;
-  h3{
+  transition: 0.4s;
+  h3 {
     width: 100%;
     text-align: center;
     height: 20px;
@@ -178,13 +195,14 @@ export default {
     font-size: 20px;
     font-weight: bold;
   }
-  .report-content{
+  .report-content {
     width: 100%;
     height: 100%;
     padding-top: 30px;
   }
 }
-.report-detail-enter,.report-detail-leave-to{
+.report-detail-enter,
+.report-detail-leave-to {
   transform: translateX(-100%);
 }
 </style>

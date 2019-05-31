@@ -9,9 +9,6 @@ import float from "base/float/float"
 
 Vue.config.productionTip = false
 
-
-
-
 Vue.component('float', float)
 
 Vue.mixin({

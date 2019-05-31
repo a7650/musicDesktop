@@ -15,6 +15,7 @@
         </span>
       </li>
     </ul>
+    <float ref="float"></float>
   </div>
 </template>
 
@@ -23,13 +24,23 @@ import { mapGetters, mapMutations } from "vuex";
 import { isFavorite } from "common/js/favorite";
 
 export default {
+  data() {
+    return {
+    };
+  },
   computed: {
-    ...mapGetters(["playList", "currentIndex", "currentSong", "favoriteMid"])
+    ...mapGetters([
+      "userStatus",
+      "playList",
+      "currentIndex",
+      "currentSong",
+      "favoriteMid",
+      "miniListFav"
+    ])
   },
   methods: {
     favoriteIcon(song) {
-      let mid = this.favoriteMid;
-      let m = isFavorite(song.mid);
+      let m = this.miniListFav[song.mid];
       return {
         "icon-favorite": m,
         "icon-unfavorite": !m
@@ -39,24 +50,43 @@ export default {
       if (!song.src) {
         return;
       }
+      if (!this.userStatus) {
+        this.$emit('notLogged')
+        return;
+      }
       let m = isFavorite(song.mid);
       if (m) {
         this.DELETE_FAVORITE(song);
       } else {
         this.ADD_FAVORITE(song);
       }
-      // this.REFRESH_MYALBUM();
+      this.SET_MINILISTFAV([song.mid,!m])
     },
-    _selectSong(song,index) {
+    _selectSong(song, index) {
       if (!song.src) {
         return;
       }
-      this.$emit("selectSong",index);
+      this.$emit("selectSong", index);
     },
     deleteSong(index) {
       this.$emit("deleteSong", index);
     },
-    ...mapMutations(["ADD_FAVORITE", "DELETE_FAVORITE", "REFRESH_MYALBUM"])
+    ...mapMutations([
+      "ADD_FAVORITE",
+      "DELETE_FAVORITE",
+      "REFRESH_MYALBUM",
+      "SET_MINILISTFAV"
+    ])
+  },
+  watch: {
+    playList(n, o) {
+      let result = {};
+      n.forEach(song => {
+        let m = isFavorite(song.mid);
+        result[song.mid] = m;
+      });
+      this.SET_MINILISTFAV(result)
+    }
   }
 };
 </script>
