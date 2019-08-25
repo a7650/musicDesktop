@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 // baseURL
 if (process.env.NODE_ENV == 'development') {
     axios.defaults.baseURL = 'http://localhost:8002/api/';

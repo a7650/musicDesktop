@@ -1,5 +1,5 @@
-const MDB = require('mongodb').MongoClient
-const crypto = require("crypto")
+// const MDB = require('mongodb').MongoClient
+// const crypto = require("crypto")
 const url = 'mongodb://localhost:27017'
 const axios = require('axios')
 const sortInterval = 1000 * 60 * 60   //每小时排序
@@ -10,37 +10,37 @@ function getHash(val) {
     return hash.digest("hex");
 }
 
-function connectMDB(fn) {
-    MDB.connect(url, { useNewUrlParser: true }, (err, db) => {
-        if (err) {
-            throw new Error('error:connectMDB() error', err.message)
-        }
-        fn(db)
-    })
-}
+// function connectMDB(fn) {
+//     MDB.connect(url, { useNewUrlParser: true }, (err, db) => {
+//         if (err) {
+//             throw new Error('error:connectMDB() error', err.message)
+//         }
+//         fn(db)
+//     })
+// }
 
-const DB = {
-    get(name, fn) {
-        connectMDB(db => {
-            let _db = db.db('music2users')
-            var _collection = _db.collection(name)
-            fn(_collection)
-            // db.close()
-        })
-    },
-    create(name, fn) {
-        connectMDB(db => {
-            let users = db.db('music2users')
-            users.createCollection(name, (err, res) => {
-                if (err) {
-                    throw new Error('error:user-create() error', err.message)
-                }
-                fn(res)
-                db.close()
-            })
-        })
-    }
-}
+// const DB = {
+//     get(name, fn) {
+//         connectMDB(db => {
+//             let _db = db.db('music2users')
+//             var _collection = _db.collection(name)
+//             fn(_collection)
+//             // db.close()
+//         })
+//     },
+//     create(name, fn) {
+//         connectMDB(db => {
+//             let users = db.db('music2users')
+//             users.createCollection(name, (err, res) => {
+//                 if (err) {
+//                     throw new Error('error:user-create() error', err.message)
+//                 }
+//                 fn(res)
+//                 db.close()
+//             })
+//         })
+//     }
+// }
 
 let rankSortTimer = setInterval(() => {
     DB.get('rank', rank => {
@@ -232,6 +232,9 @@ const LocalServer = {
 }
 
 const ProxyServer = {
+    productDetails(req,res){
+        console.log(res.body)
+    },
     getDiscList(req, res) {
         const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
         axios.get(url, {

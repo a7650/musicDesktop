@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <mHeader>歌单推荐</mHeader>
+    <!-- <div ref="a" id="a"></div> -->
+    <mHeader>歌单推荐{{c}}</mHeader>
     <ul class="items">
       <li
         class="item"
@@ -24,7 +25,9 @@
         <recommend-list v-if="discIndex===10"></recommend-list>
       </keep-alive>
     </div>
-    <router-view></router-view>
+    <router-view>
+      <!-- home的子路由 -->
+    </router-view>
   </div>
 </template>
 
@@ -36,6 +39,8 @@ import mHeader from "base/mHeader/mHeader";
 import { shuffle } from "common/js/tools";
 import allList from "./allList.js";
 import recommendList from "components/recommendList/recommendList";
+import Carousel from "carousel-z";
+
 export default {
   data() {
     return {
@@ -51,7 +56,6 @@ export default {
         "8": [],
         "9": []
       },
-      discIndex: 0
     };
   },
   components: {
@@ -85,6 +89,58 @@ export default {
   created() {
     this._allList = shuffle(allList.splice(0, 10));
     this.selectDisc(0);
+  },
+  mounted() {
+    // var myCarousel = new Carousel({
+    //   width: "200px",
+    //   height: "300px",
+    //   parentNode: this.$refs.a,
+    //   duration: "2000ms",
+    //   transitionTime: ".5s",
+    //   hidden: false,
+    //   transitionName: "banner",
+    //   img: [
+    //     {
+    //       href: "123123",
+    //       src: require("./img/正面.jpg"),
+    //       tipMes: "这是第一张图的介绍123213213213"
+    //     },
+    //     {
+    //       href: "123123",
+    //       src: require("./img/反面.jpg"),
+    //       tipMes: "这是第2张图的介绍123213213213"
+    //     },
+    //     {
+    //       href: "123123",
+    //       src: require("./img/1.jpg"),
+    //       tipMes: "这是第3张图的介绍123213213213这是第3张图的介绍"
+    //     },
+    //     {
+    //       href: "123123",
+    //       src: require("./img/2.jpg"),
+    //       tipMes:
+    //         "这是第4张图的介绍123213213213这是第4张图的介绍123这是第4<br>张图的介绍123"
+    //     }
+    //   ],
+    //   hover: {
+    //     pause: true
+    //   },
+    //   dots: {
+    //     show: true,
+    //     ordinaryColor: "rgba(255,0,0,.3)",
+    //     activeColor: "#ff0000",
+    //     dotSize: "20px",
+    //     bottomDistance: "20px",
+    //     transition: ".3s",
+    //     turn: true
+    //   },
+    //   tip: {
+    //     show: true,
+    //     backgroundColor: "blue",
+    //     fontColor: "#fff"
+    //   }
+    // });
+    // myCarousel.picPlay();
   }
 };
 </script>
@@ -136,5 +192,19 @@ export default {
 }
 .recommend {
   margin: 0;
+}
+#a {
+  width: 200px;
+  height: 300px;
+  margin: 0 auto;
+}
+.banner-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.banner-leave {
+  transform: translateX(-100%);
+  opacity: 0;
 }
 </style>

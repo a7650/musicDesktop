@@ -1,4 +1,3 @@
-const axios = require('axios')
 const path = require('path')
 const CompressionPlugin = require('compression-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
@@ -12,10 +11,13 @@ module.exports = {
   outputDir: 'dist',
   assetsDir: './',
   pages: undefined,
+
   //是否使用包含运行时编译器的 Vue 构建版本
   runtimeCompiler: false,
+
   //是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建，在适当的时候开启几个子进程去并发的执行压缩
   parallel: require('os').cpus().length > 1,
+
   //生产环境是否生成 sourceMap 文件
   productionSourceMap: false,
 
@@ -25,6 +27,7 @@ module.exports = {
     https: false,
     hotOnly: true,
   },
+
   configureWebpack: {
     resolve: {
       alias: {
@@ -57,6 +60,24 @@ module.exports = {
     externals: {
       "echarts": "echarts",
       "crypto": "CryptoJS"
+    }
+  },
+
+  css: {
+    loaderOptions: {
+      stylus: {
+        'resolve url': true,
+        'import': [
+          './src/theme'
+        ]
+      }
+    }
+  },
+
+  pluginOptions: {
+    'cube-ui': {
+      postCompile: true,
+      theme: true
     }
   }
 }

@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "connect-mongo": "^2.0.3"
+  }
+}
